@@ -13,7 +13,7 @@ Below is a list of ideas I have for completing the challenge.
 - There should be a file in the root folder (or another globally accessible location) containing the following, as specified in the README.md:
   - A command to install the project dependencies (for both the frontend and backend), as well as the database (for example, via Docker).
   - A command to start the backend and frontend.
-- Creo que la siguiente estructura del backend estaría perfecta:
+- The following backend structure could work well (initial proposal; see the [implementation plan](implementation-plan.md) for the actual structure):
   ```
   src/
     TaskManager.Domain/

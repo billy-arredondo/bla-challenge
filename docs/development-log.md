@@ -26,3 +26,20 @@ focused on significant work, decisions, and verification results.
 ## GenAI review policy
 
 - Decided not to add custom OpenCode skills because the project is small and `AGENTS.md` provides sufficient repository guidance. Custom commands should generally return suggestions or text for human review instead of applying changes directly; `/new-branch` remains an explicit exception because it performs the requested branch creation.
+
+## Documentation Review 001
+
+- Reviewed the current scaffold against the challenge and existing documentation.
+- Updated the README and agent guidance to describe the four .NET 10 production
+  projects and matching xUnit test projects, with root-relative setup/build/test
+  commands and configured API launch profiles.
+- Corrected stale project counts and pending-project claims in the implementation
+  plan and GenAI record. Frontend/database choices, business functionality,
+  authentication, demo data, and meaningful tests remain pending.
+- Verified SDK `10.0.402` and ran `dotnet build src/backend/BlaChallenge.slnx`:
+  succeeded with zero warnings and zero errors.
+- Ran `dotnet test src/backend/BlaChallenge.slnx --no-build`: all four assemblies
+  reported no tests available. Recorded this as an empty test scaffold rather
+  than a passing functional suite.
+- Recorded the review prompt, representative scaffold, corrections, validation,
+  and limitations in `docs/genai.md`.

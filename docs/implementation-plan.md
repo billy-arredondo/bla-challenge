@@ -15,35 +15,41 @@ src/backend/
   BlaChallenge.Domain.Tests/       # Domain tests
   BlaChallenge.Application.Tests/  # Application tests
   BlaChallenge.Infrastructure.Tests/ # Infrastructure tests
+  BlaChallenge.Api.Tests/          # API tests
 ```
 
-The solution currently contains the three production projects and their
+The solution currently contains four .NET 10 production projects and their
 corresponding test projects. The current project dependencies are:
 
 - Application references Domain.
 - Infrastructure references Application and Domain.
+- API references Application and Infrastructure.
 - Each test project references the production project it tests.
 
-The backend scaffolding builds successfully with the current .NET SDK. The API
-project is now scaffolded and references Application and Infrastructure. The
-The API test project is now scaffolded and references the API project. The
-frontend has not been scaffolded yet.
+The backend scaffold builds with SDK `10.0.402` with zero warnings and zero
+errors. The four test projects use xUnit and Coverlet, but contain no test cases;
+`dotnet test` currently reports no tests available. The API host registers
+controllers and development-only OpenAPI generation, but no business endpoints
+are implemented. Domain, Application, and Infrastructure have no implementation
+classes yet. The frontend has not been scaffolded.
 
-The following projects remain to be added:
+The frontend remains to be added:
 
 ```text
-src/backend/
 src/frontend/                      # Frontend application
 ```
 
 Create supporting files as they become useful rather than adding empty
-placeholders. Confirm the solution format when selecting the .NET SDK.
+placeholders. See the root [README](../README.md) for setup, build, test, and API
+launch commands. The solution already uses the `.slnx` format; no `global.json`
+currently pins the SDK.
 
 ## Decisions to confirm
 
 - Use a task manager as the application scope: tasks belong to users and have a
   title, description, status, and due date.
-- Select the .NET version, frontend framework, data store, and testing tools.
+- Select the frontend framework and data store; .NET 10 and xUnit are already
+  configured in the scaffold.
   React with Vite and SQLite with `Microsoft.Data.Sqlite` are initial suggestions.
 - Use Clean Architecture. If using CQRS, call command and query use cases directly
   without a mediator or generic dispatcher.
@@ -54,13 +60,13 @@ placeholders. Confirm the solution format when selecting the .NET SDK.
 
 1. **Define scope:** write the informal user story and acceptance criteria for
    registration, login, and task CRUD.
-2. **Complete scaffolding:** set up the frontend and verify the actual build and
-   test commands. The initial Domain, Application, Infrastructure, API, and
-   backend test project scaffolding is complete.
+2. **Maintain the backend foundation:** the Domain, Application, Infrastructure,
+   API, and matching test project scaffolding is complete, and build/test commands
+   have been verified. Add meaningful tests alongside each implemented use case.
 3. **Implement the backend incrementally with TDD:** start with a complete use
    case, then cover persistence, business rules, authentication, and API behavior.
    Do not use Entity Framework, Dapper, or Mediator.
-4. **Integrate the frontend:** implement responsive authentication and task CRUD
+4. **Scaffold and integrate the frontend:** implement responsive authentication and task CRUD
    screens, including validation, loading, empty, and error states.
 5. **Verify the demo:** seed data and credentials; check the complete user flow,
    authorization, and tests for data access, business logic, and API endpoints.
