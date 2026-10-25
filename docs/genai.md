@@ -6,6 +6,18 @@ This document records how generative AI was used during the repository setup and
 
 The work completed so far concerns repository workflow automation. No backend, frontend, database, authentication, or business logic implementation has been generated yet.
 
+## Tooling and Review Policy
+
+This is a small project, so no custom OpenCode skills are used. Repository-wide
+guidance is kept in `AGENTS.md`, which is sufficient for the current scope.
+
+Custom commands should normally provide suggestions, generated text, or proposed
+changes rather than applying changes directly. This preserves a deliberate human
+review step before modifying files, committing code, or changing project state.
+The `/new-branch` command is the explicit exception: after receiving an exact
+valid branch name, it performs the requested Git branch creation. The other
+workflow commands remain advisory and do not create commits or modify files.
+
 ## Starting Context
 
 The work started by reviewing `docs/brainstorming.md` and `docs/challenge.md`. The challenge document provides the acceptance criteria and constraints. The brainstorming document provides initial ideas to evaluate, not fixed architectural decisions. The implementation is being iterated against both sources while treating the challenge requirements as authoritative.
