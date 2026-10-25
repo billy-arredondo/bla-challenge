@@ -35,8 +35,10 @@ endpoints are not implemented. The frontend has not been scaffolded.
 
 Application features are organized by entity. The current `Users` feature is
 split into `Commands` for registration and login and `Queries` for retrieving
-the authenticated user. Use cases are invoked directly by the API; no Mediator
-or generic dispatcher is used.
+the authenticated user. Operation files are placed directly in those folders;
+each operation has its own folder with conventional `Command.cs`, `Query.cs`,
+and `UseCase.cs` files as applicable. Use cases are invoked directly by the API;
+no Mediator or generic dispatcher is used.
 
 The frontend remains to be added:
 

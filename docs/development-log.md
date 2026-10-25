@@ -85,3 +85,32 @@ focused on significant work, decisions, and verification results.
   `/openapi/v1.json`; temporary database and log files were removed afterward.
 - Next steps are task domain and CRUD functionality, task ownership tests,
   frontend selection/integration, and seeded demo data.
+
+## Documentation Review 003
+
+- Applied the repository organization guideline to the backend Application
+  project by moving operation files directly under `Users/Commands` and
+  `Users/Queries`.
+- Updated namespaces and consuming `using` directives without changing the
+  command, query, or use-case type names.
+- Documented the rule in `docs/contributing.md` and `docs/implementation-plan.md`.
+- Verified `dotnet restore src/backend/BlaChallenge.slnx` successfully.
+- Verified `dotnet build src/backend/BlaChallenge.slnx --no-restore`: succeeded
+  with zero warnings and zero errors.
+- Verified `dotnet test src/backend/BlaChallenge.slnx --no-build`: 14 tests passed
+  across the four test projects.
+
+## Documentation Review 004
+
+- Reorganized Application operations so each command or query has a dedicated
+  folder containing conventionally named `Command.cs`, `Query.cs`, and
+  `UseCase.cs` files as applicable.
+- Updated namespaces and consuming `using` directives while preserving the
+  public command, query, and use-case type names.
+- Updated the repository organization guideline to describe the operation-folder
+  convention.
+- Verified `dotnet restore src/backend/BlaChallenge.slnx` successfully.
+- Verified `dotnet build src/backend/BlaChallenge.slnx --no-restore`: succeeded
+  with zero warnings and zero errors.
+- Verified `dotnet test src/backend/BlaChallenge.slnx --no-build`: 14 tests passed
+  across the four test projects.
