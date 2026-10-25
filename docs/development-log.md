@@ -18,6 +18,7 @@ focused on significant work, decisions, and verification results.
 ## Backend scaffolding
 
 - Created the initial `BlaChallenge.slnx` solution under `src/backend/` with Domain, Application, and Infrastructure projects and matching test projects. The API, API tests, and frontend remain to be added.
+- Configured project references so Application depends on Domain, Infrastructure depends on Application and Domain, and each test project references the production project it tests.
 
 ## GenAI review policy
 
