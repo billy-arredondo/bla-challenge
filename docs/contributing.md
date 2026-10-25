@@ -35,10 +35,17 @@ Use English for branch names, commit messages, PR titles, and PR descriptions.
   file.
 - Leave one blank line after the namespace, then place the ordered `using`
   directives.
-- Keep only required `using` directives; the root `.editorconfig` marks
-  unnecessary imports as errors and sorts system directives first.
+- Keep only required `using` directives; `src/backend/.editorconfig` marks
+  unnecessary imports as errors and sorts system directives first for backend
+  C# files.
 - Run `dotnet format src/backend/BlaChallenge.slnx --no-restore
   --verify-no-changes` before submitting changes.
+
+The repository-wide `.editorconfig` provides UTF-8, LF line endings, and
+two-space indentation defaults. The backend override uses four-space
+indentation and contains the backend-specific C# layout and diagnostic rules.
+`.gitattributes` also keeps Git checkouts on LF regardless of the local
+`core.autocrlf` setting.
 
 ## Primary Constructors
 

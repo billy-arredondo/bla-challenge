@@ -68,6 +68,18 @@ $env:Jwt__Key = "replace-with-a-local-random-key-of-at-least-32-characters"
 dotnet run --project src/backend/BlaChallenge.Api --launch-profile http
 ```
 
+The API project supports .NET user secrets for local development. Set the key
+once instead of exporting it for each process:
+
+```sh
+dotnet user-secrets --project src/backend/BlaChallenge.Api \
+  set "Jwt:Key" "replace-with-a-local-random-key-of-at-least-32-characters"
+```
+
+The key must contain at least 32 characters. The issuer, audience, and token
+expiration can be overridden through the `Jwt` configuration section; the
+defaults are `BlaChallenge`, `BlaChallenge.Client`, and 60 minutes.
+
 The API endpoints implemented in this iteration are:
 
 - `GET /api/auth/ping`: public health-style endpoint.
