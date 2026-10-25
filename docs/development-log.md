@@ -14,3 +14,7 @@ focused on significant work, decisions, and verification results.
 ## OpenCode workflow
 
 - Added custom commands to suggest branch names, create an exact branch, and generate commit messages from staged changes, with DeepSeek model preference and fallback to the current session model.
+
+## Backend scaffolding
+
+- Created the initial `BlaChallenge.slnx` solution under `src/backend/` with Domain, Application, and Infrastructure projects and matching test projects. The API, API tests, and frontend remain to be added.

@@ -17,6 +17,18 @@ The initial GenAI-assisted workflow was therefore:
 3. Turn the useful ideas into small, reviewable workflow improvements.
 4. Validate each generated change against the repository guidance before continuing.
 
+### Backend structure
+
+GenAI was used to compare possible .NET solution layouts against the challenge
+requirements. The selected structure separates Domain, Application, and
+Infrastructure projects and gives each layer a corresponding test project. The
+solution is named `BlaChallenge.slnx` and is located under `src/backend/`.
+
+The structure was deliberately kept independent of the task-management example
+in the challenge. The API and frontend projects were not added prematurely; they
+remain explicit next steps because the current implementation contains only the
+backend foundation.
+
 ## Prompts and Outcomes
 
 ### Branch workflow commands
