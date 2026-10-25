@@ -7,7 +7,7 @@ export const BranchCommandsModel = async ({ client }) => {
       if (
         command === "new-branch" ||
         command === "suggest-branch-names" ||
-        command === "commit-message"
+        command === "commit-message-staged"
       ) pending.add(sessionID)
     },
     "chat.message": async ({ sessionID }, { message }) => {
