@@ -10,7 +10,7 @@ src/backend/
   BlaChallenge.slnx
   BlaChallenge.Api/                # ASP.NET Web API
   BlaChallenge.Domain/             # Entities and domain rules
-  BlaChallenge.Application/        # Use cases and application contracts
+  BlaChallenge.Application/        # Entity-based commands, queries, and contracts
   BlaChallenge.Infrastructure/     # Data access implementations
   BlaChallenge.Domain.Tests/       # Domain tests
   BlaChallenge.Application.Tests/  # Application tests
@@ -32,6 +32,11 @@ hashing, JWT Bearer authentication, and authentication controllers. The four
 test projects use xUnit and Coverlet and contain domain, application,
 infrastructure, and API tests for this iteration. The task model and CRUD
 endpoints are not implemented. The frontend has not been scaffolded.
+
+Application features are organized by entity. The current `Users` feature is
+split into `Commands` for registration and login and `Queries` for retrieving
+the authenticated user. Use cases are invoked directly by the API; no Mediator
+or generic dispatcher is used.
 
 The frontend remains to be added:
 
