@@ -41,9 +41,11 @@ and `UseCase.cs` files as applicable. Use cases are invoked directly by the API;
 no Mediator or generic dispatcher is used.
 
 C# files use file-scoped namespaces on the first line, followed by a blank line
-and ordered, necessary `using` directives. The root `.editorconfig` applies
-these rules to the backend and other repository content, enforcing file-scoped
-namespaces, using placement, sorting, and removal of unnecessary imports.
+and ordered, necessary `using` directives. The repository-wide `.editorconfig`
+provides UTF-8, LF line endings, and two-space indentation defaults. The
+`src/backend/.editorconfig` override uses four-space indentation and enforces
+file-scoped namespaces, using placement, sorting, and removal of unnecessary
+imports for backend C# files.
 Classes should prefer primary constructors when they simplify dependency
 initialization and readability. Traditional constructors remain appropriate
 when the primary-constructor form would make validation, initialization,

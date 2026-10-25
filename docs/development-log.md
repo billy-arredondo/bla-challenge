@@ -160,3 +160,27 @@ focused on significant work, decisions, and verification results.
   to separate files.
 - Added the convention to `docs/contributing.md` and
   `docs/implementation-plan.md`.
+
+## Documentation Review 008
+
+- Compared the implemented backend structure, authentication flow, persistence
+  configuration, API launch profiles, and test projects with the documentation.
+- Corrected the formatting guidance to identify `src/backend/.editorconfig` as
+  the source of backend C# rules, while the root file provides repository-wide
+  defaults and the backend's four-space indentation override.
+- Added `.gitattributes` to keep repository checkouts on LF even when a local
+  Git configuration enables automatic line-ending conversion.
+- Documented the configured .NET user-secrets support for the local JWT signing
+  key and clarified the JWT defaults.
+- Confirmed that the current iteration still implements user authentication and
+  SQLite user persistence only; task CRUD, the frontend, seeded demo data, and
+  presentation materials remain pending.
+- No backend source code was changed during this review.
+- Verified `dotnet format src/backend/BlaChallenge.slnx --no-restore
+  --verify-no-changes` successfully after LF normalization.
+- Verified `dotnet build src/backend/BlaChallenge.slnx --no-restore`: succeeded
+  with zero warnings and zero errors.
+- Verified `dotnet test src/backend/BlaChallenge.slnx --no-build`: 14 tests
+  passed across the four test projects.
+- Verified `git diff --check` and confirmed all tracked files use LF line
+  endings.

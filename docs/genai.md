@@ -393,3 +393,52 @@ The user asked whether controller endpoints and records should be grouped in
   it.
 - Reviewed the documentation changes for consistency with the existing backend
   organization rules.
+
+## Documentation Review 008
+
+### Prompt
+
+The user asked for an analysis of `src/backend/` and for the documentation in
+`docs/` to be updated wherever it no longer matched the implementation.
+
+### Output and corrections
+
+- Compared the solution structure, project references, API controller, startup
+  configuration, SQLite initializer, JWT configuration, launch profiles, and
+  test projects with `README.md`, `docs/challenge.md`,
+  `docs/implementation-plan.md`, `docs/development-log.md`, and this record.
+- Corrected the formatting documentation to match the actual split between the
+  repository-wide `.editorconfig` and `src/backend/.editorconfig`.
+- Added `.gitattributes` after validation showed that the local
+  `core.autocrlf=true` setting could re-materialize CRLF in backend files.
+- Added setup guidance for the API project's configured .NET user-secrets
+  identifier and documented the current JWT defaults.
+- Kept pending requirements explicitly pending: task CRUD, the frontend, seeded
+  demo data, and presentation materials are not implemented in the backend.
+
+Representative reviewed configuration (`src/backend/.editorconfig`):
+
+```ini
+[*]
+indent_size = 4
+
+[*.cs]
+csharp_style_namespace_declarations = file_scoped:error
+dotnet_diagnostic.IDE0005.severity = error
+```
+
+### Validation and limitations
+
+- Reviewed all backend source, project, configuration, and test files matched by
+  the repository structure before editing the documentation.
+- Confirmed the documented API endpoints and JWT configuration against the
+  controller and startup code.
+- No backend behavior was changed during this review.
+- `dotnet format src/backend/BlaChallenge.slnx --no-restore
+  --verify-no-changes` passed after LF normalization.
+- `dotnet build src/backend/BlaChallenge.slnx --no-restore` passed with zero
+  warnings and zero errors.
+- `dotnet test src/backend/BlaChallenge.slnx --no-build` passed 14 tests across
+  the four test projects.
+- `git diff --check` passed and all tracked files were confirmed to use LF line
+  endings.
