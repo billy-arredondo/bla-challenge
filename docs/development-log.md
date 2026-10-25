@@ -20,6 +20,8 @@ focused on significant work, decisions, and verification results.
 - Created the initial `BlaChallenge.slnx` solution under `src/backend/` with Domain, Application, and Infrastructure projects and matching test projects. The API, API tests, and frontend remain to be added.
 - Configured project references so Application depends on Domain, Infrastructure depends on Application and Domain, and each test project references the production project it tests.
 - Verified the backend solution with `dotnet build BlaChallenge.slnx --no-restore`: the build succeeded with zero warnings and zero errors.
+- Added the ASP.NET API project with references to Application and Infrastructure, and removed the template WeatherForecast endpoint and local project artifacts. The API test project and frontend remained to be added at that point.
+- Added the API test project, referenced the API project, and registered it in the solution. The frontend remains to be added.
 
 ## GenAI review policy
 

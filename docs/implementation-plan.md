@@ -8,6 +8,7 @@ Working plan for completing [the challenge](challenge.md), based on the
 ```text
 src/backend/
   BlaChallenge.slnx
+  BlaChallenge.Api/                # ASP.NET Web API
   BlaChallenge.Domain/             # Entities and domain rules
   BlaChallenge.Application/        # Use cases and application contracts
   BlaChallenge.Infrastructure/     # Data access implementations
@@ -24,14 +25,14 @@ corresponding test projects. The current project dependencies are:
 - Each test project references the production project it tests.
 
 The backend scaffolding builds successfully with the current .NET SDK. The API
-and frontend have not been scaffolded yet.
+project is now scaffolded and references Application and Infrastructure. The
+The API test project is now scaffolded and references the API project. The
+frontend has not been scaffolded yet.
 
 The following projects remain to be added:
 
 ```text
 src/backend/
-  BlaChallenge.Api/                # ASP.NET Core Web API
-  BlaChallenge.Api.Tests/          # API endpoint tests
 src/frontend/                      # Frontend application
 ```
 
@@ -53,9 +54,9 @@ placeholders. Confirm the solution format when selecting the .NET SDK.
 
 1. **Define scope:** write the informal user story and acceptance criteria for
    registration, login, and task CRUD.
-2. **Complete scaffolding:** add the API and API test projects, then set up the
-   frontend; verify the actual build and test commands. The initial Domain,
-   Application, Infrastructure, and test project scaffolding is complete.
+2. **Complete scaffolding:** set up the frontend and verify the actual build and
+   test commands. The initial Domain, Application, Infrastructure, API, and
+   backend test project scaffolding is complete.
 3. **Implement the backend incrementally with TDD:** start with a complete use
    case, then cover persistence, business rules, authentication, and API behavior.
    Do not use Entity Framework, Dapper, or Mediator.

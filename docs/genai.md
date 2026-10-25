@@ -58,7 +58,7 @@ The commands enforce the allowed branch types, English names, and short kebab-ca
 
 The request was to create an OpenCode command that reviews staged changes and generates a commit message following the repository conventions.
 
-The resulting command is `.opencode/commands/commit-message.md`. It instructs OpenCode to inspect only `git diff --cached`, ignore unstaged and untracked files, produce one English commit subject, and avoid creating the commit or modifying files.
+The resulting command is `.opencode/commands/commit-message-staged.md`. It instructs OpenCode to inspect only `git diff --cached`, ignore unstaged and untracked files, produce one English commit subject, and avoid creating the commit or modifying files.
 
 ## Representative Generated Code
 
@@ -74,7 +74,7 @@ const deepseek = models.find(({ providerID, modelID }) =>
 if (deepseek) message.model = deepseek
 ```
 
-The plugin is located at `.opencode/plugins/branch-commands-model.js` and applies to `/new-branch`, `/suggest-branch-names`, and `/commit-message`.
+The plugin is located at `.opencode/plugins/branch-commands-model.js` and applies to `/new-branch`, `/suggest-branch-names`, and `/commit-message-staged`.
 
 ## Validation and Corrections
 
@@ -82,7 +82,7 @@ The plugin is located at `.opencode/plugins/branch-commands-model.js` and applie
 - Confirmed that branch types and commit types match the repository conventions.
 - Added explicit validation for branch names using a regular expression and `git check-ref-format --branch`.
 - Ensured branch suggestions are generated in English even when the purpose is described in another language.
-- Ensured commit-message generation considers staged changes only.
+- Ensured commit-message-staged generation considers staged changes only.
 - Ran `node --check` against the plugin successfully.
 - Ran `git diff --check` successfully.
 - Reviewed the staged diff manually before generating a commit message.
@@ -94,7 +94,7 @@ The plugin is located at `.opencode/plugins/branch-commands-model.js` and applie
 - Invalid exact branch names must be rejected before Git commands run.
 - Existing local branch names must not be reused.
 - No custom command may reset, commit, push, or modify project files unless explicitly requested.
-- The commit-message command reports when no files are staged.
+- The commit-message-staged command reports when no files are staged.
 - If no DeepSeek model is available or the provider lookup fails, the current session model is retained.
 
 ## Current Limitations
