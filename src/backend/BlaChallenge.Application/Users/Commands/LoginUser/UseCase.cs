@@ -5,22 +5,11 @@ using BlaChallenge.Application.Users.Commands.RegisterUser;
 using BlaChallenge.Application.Users.Contracts;
 using BlaChallenge.Application.Users.Exceptions;
 
-public sealed class LoginUserUseCase
+public sealed class LoginUserUseCase(
+    IUserRepository userRepository,
+    IPasswordHasher passwordHasher,
+    ITokenService tokenService)
 {
-    private readonly IUserRepository userRepository;
-    private readonly IPasswordHasher passwordHasher;
-    private readonly ITokenService tokenService;
-
-    public LoginUserUseCase(
-        IUserRepository userRepository,
-        IPasswordHasher passwordHasher,
-        ITokenService tokenService)
-    {
-        this.userRepository = userRepository;
-        this.passwordHasher = passwordHasher;
-        this.tokenService = tokenService;
-    }
-
     public async Task<LoginResult> ExecuteAsync(
         LoginUserCommand command,
         CancellationToken cancellationToken = default)

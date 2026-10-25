@@ -1,14 +1,7 @@
 namespace BlaChallenge.Infrastructure.Sqlite;
 
-public sealed class SqliteDatabaseInitializer
+public sealed class SqliteDatabaseInitializer(SqliteConnectionFactory connectionFactory)
 {
-    private readonly SqliteConnectionFactory connectionFactory;
-
-    public SqliteDatabaseInitializer(SqliteConnectionFactory connectionFactory)
-    {
-        this.connectionFactory = connectionFactory;
-    }
-
     public async Task InitializeAsync(CancellationToken cancellationToken = default)
     {
         await using var connection = connectionFactory.Create();

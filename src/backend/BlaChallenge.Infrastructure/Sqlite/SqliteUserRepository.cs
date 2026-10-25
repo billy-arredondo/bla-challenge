@@ -5,15 +5,8 @@ using BlaChallenge.Application.Users.Exceptions;
 using BlaChallenge.Domain;
 using Microsoft.Data.Sqlite;
 
-public sealed class SqliteUserRepository : IUserRepository
+public sealed class SqliteUserRepository(SqliteConnectionFactory connectionFactory) : IUserRepository
 {
-    private readonly SqliteConnectionFactory connectionFactory;
-
-    public SqliteUserRepository(SqliteConnectionFactory connectionFactory)
-    {
-        this.connectionFactory = connectionFactory;
-    }
-
     public async Task AddAsync(User user, CancellationToken cancellationToken = default)
     {
         await using var connection = connectionFactory.Create();

@@ -11,22 +11,11 @@ using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/auth")]
-public sealed class AuthenticationController : ControllerBase
+public sealed class AuthenticationController(
+    RegisterUserUseCase registerUser,
+    LoginUserUseCase loginUser,
+    GetCurrentUserUseCase getCurrentUser) : ControllerBase
 {
-    private readonly RegisterUserUseCase registerUser;
-    private readonly LoginUserUseCase loginUser;
-    private readonly GetCurrentUserUseCase getCurrentUser;
-
-    public AuthenticationController(
-        RegisterUserUseCase registerUser,
-        LoginUserUseCase loginUser,
-        GetCurrentUserUseCase getCurrentUser)
-    {
-        this.registerUser = registerUser;
-        this.loginUser = loginUser;
-        this.getCurrentUser = getCurrentUser;
-    }
-
     [AllowAnonymous]
     [HttpGet("ping")]
     public IActionResult Ping() => Ok(new { status = "ok" });

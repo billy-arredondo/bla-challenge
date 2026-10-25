@@ -19,19 +19,12 @@ public sealed class JwtOptions
     public int ExpirationMinutes { get; set; } = 60;
 }
 
-public sealed class JwtTokenService : ITokenService
+public sealed class JwtTokenService(IOptions<JwtOptions> options) : ITokenService
 {
-    private readonly JwtOptions options;
-
-    public JwtTokenService(IOptions<JwtOptions> options)
-    {
-        this.options = options.Value;
-    }
-
     public string CreateToken(User user)
     {
         var credentials = new SigningCredentials(
-            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.Key)),
+            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(options.Value.Key)),
             SecurityAlgorithms.HmacSha256);
         var claims = new[]
         {
@@ -41,10 +34,10 @@ public sealed class JwtTokenService : ITokenService
             new Claim(ClaimTypes.Email, user.Email)
         };
         var token = new JwtSecurityToken(
-            options.Issuer,
-            options.Audience,
+            options.Value.Issuer,
+            options.Value.Audience,
             claims,
-            expires: DateTime.UtcNow.AddMinutes(options.ExpirationMinutes),
+            expires: DateTime.UtcNow.AddMinutes(options.Value.ExpirationMinutes),
             signingCredentials: credentials);
 
         return new JwtSecurityTokenHandler().WriteToken(token);

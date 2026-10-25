@@ -6,19 +6,11 @@ using BlaChallenge.Application.Users.Contracts;
 using BlaChallenge.Application.Users.Exceptions;
 using BlaChallenge.Domain;
 
-public sealed class RegisterUserUseCase
+public sealed class RegisterUserUseCase(
+    IUserRepository userRepository,
+    IPasswordHasher passwordHasher,
+    IClock clock)
 {
-    private readonly IUserRepository userRepository;
-    private readonly IPasswordHasher passwordHasher;
-    private readonly IClock clock;
-
-    public RegisterUserUseCase(IUserRepository userRepository, IPasswordHasher passwordHasher, IClock clock)
-    {
-        this.userRepository = userRepository;
-        this.passwordHasher = passwordHasher;
-        this.clock = clock;
-    }
-
     public async Task<RegisterUserResult> ExecuteAsync(
         RegisterUserCommand command,
         CancellationToken cancellationToken = default)
