@@ -243,3 +243,55 @@ return $"v1.{Iterations}.{Convert.ToBase64String(salt)}.{Convert.ToBase64String(
   available at `/openapi/v1.json`.
 - Task models, task CRUD, ownership enforcement for task records, frontend
   integration, seeded demo data, and presentation materials remain pending.
+
+## Documentation Review 003
+
+### Prompt
+
+The user requested applying the simpler backend folder structure used for
+application operations and recording it as a repository guideline in `docs/`.
+
+### Output and corrections
+
+- Moved command files directly under `Users/Commands` and query files directly
+  under `Users/Queries`.
+- Preserved descriptive file and type names while removing operation-specific
+  subfolders and updating namespaces and consuming directives.
+- Recorded the rule in `docs/contributing.md` and reflected the current layout
+  in `docs/implementation-plan.md`.
+
+### Validation
+
+- Ran `dotnet restore src/backend/BlaChallenge.slnx` successfully.
+- Ran `dotnet build src/backend/BlaChallenge.slnx --no-restore` successfully with
+  zero warnings and zero errors.
+- Ran `dotnet test src/backend/BlaChallenge.slnx --no-build`; all 14 tests passed
+  across the four test projects.
+- Confirmed no old operation-specific namespaces remain under `src/backend/`.
+
+## Documentation Review 004
+
+### Prompt
+
+The user requested grouping each Application operation into its own folder and
+placing its command or query and use case in conventionally named files, with
+the rule documented in the repository.
+
+### Output and corrections
+
+- Grouped login and registration under `Users/Commands/{Operation}/`.
+- Grouped the current-user query under `Users/Queries/GetCurrentUser/`.
+- Used `Command.cs`, `Query.cs`, and `UseCase.cs` file names as applicable,
+  preserving the existing public type names and behavior.
+- Updated the current repository guidance in `docs/contributing.md` and
+  `docs/implementation-plan.md`.
+
+### Validation
+
+- Ran `dotnet restore src/backend/BlaChallenge.slnx` successfully.
+- Ran `dotnet build src/backend/BlaChallenge.slnx --no-restore` successfully with
+  zero warnings and zero errors.
+- Ran `dotnet test src/backend/BlaChallenge.slnx --no-build`; all 14 tests passed
+  across the four test projects.
+- Confirmed the Application operation files use the documented folder and file
+  naming convention.
