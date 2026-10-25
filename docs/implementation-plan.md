@@ -1,37 +1,42 @@
 # Implementation Plan
 
-Working proposal for completing [the challenge](challenge.md), based on the
-[brainstorming notes](brainstorming.md). Update this plan as decisions are made;
-the structure below is proposed, not yet implemented.
+Working plan for completing [the challenge](challenge.md), based on the
+[brainstorming notes](brainstorming.md). Update this plan as decisions are made.
 
-## Proposed repository structure
+## Current Repository Structure
 
 ```text
-README.md                         # Overview, prerequisites, setup, and demo credentials
-AGENTS.md                         # Stable guidance for coding agents
-TaskManager.sln
-src/
-  TaskManager.Domain/             # Entities and domain rules
-  TaskManager.Application/        # Use cases and persistence interfaces
-  TaskManager.Infrastructure/     # Data access implementations
-  TaskManager.Api/                # ASP.NET Core Web API
-  task-manager-web/               # Frontend application
-tests/
-  TaskManager.UnitTests/
-  TaskManager.IntegrationTests/
-docs/
-  challenge.md                    # Original requirements
-  brainstorming.md                # Ideas and alternatives
-  implementation-plan.md          # Agreed decisions and next steps
-  user-story.md                   # User story, scope, and acceptance criteria
-  architecture.md                 # Technical decisions and a simple diagram
-  genai.md                        # Prompts, output samples, validation, and corrections
-  presentation/                   # Slides and demo outline
-scripts/                          # Setup and startup automation, if needed
+src/backend/
+  BlaChallenge.slnx
+  BlaChallenge.Domain/             # Entities and domain rules
+  BlaChallenge.Application/        # Use cases and application contracts
+  BlaChallenge.Infrastructure/     # Data access implementations
+  BlaChallenge.Domain.Tests/       # Domain tests
+  BlaChallenge.Application.Tests/  # Application tests
+  BlaChallenge.Infrastructure.Tests/ # Infrastructure tests
 ```
 
-Create supporting files as they become useful rather than adding empty placeholders.
-Confirm the solution format when selecting the .NET SDK.
+The solution currently contains the three production projects and their
+corresponding test projects. The current project dependencies are:
+
+- Application references Domain.
+- Infrastructure references Application and Domain.
+- Each test project references the production project it tests.
+
+The backend scaffolding builds successfully with the current .NET SDK. The API
+and frontend have not been scaffolded yet.
+
+The following projects remain to be added:
+
+```text
+src/backend/
+  BlaChallenge.Api/                # ASP.NET Core Web API
+  BlaChallenge.Api.Tests/          # API endpoint tests
+src/frontend/                      # Frontend application
+```
+
+Create supporting files as they become useful rather than adding empty
+placeholders. Confirm the solution format when selecting the .NET SDK.
 
 ## Decisions to confirm
 
@@ -48,8 +53,9 @@ Confirm the solution format when selecting the .NET SDK.
 
 1. **Define scope:** write the informal user story and acceptance criteria for
    registration, login, and task CRUD.
-2. **Create scaffolding:** set up the solution, layer references, frontend, and
-   test projects; verify the actual build and test commands.
+2. **Complete scaffolding:** add the API and API test projects, then set up the
+   frontend; verify the actual build and test commands. The initial Domain,
+   Application, Infrastructure, and test project scaffolding is complete.
 3. **Implement the backend incrementally with TDD:** start with a complete use
    case, then cover persistence, business rules, authentication, and API behavior.
    Do not use Entity Framework, Dapper, or Mediator.
