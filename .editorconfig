@@ -2,20 +2,10 @@ root = true
 
 [*]
 charset = utf-8
-end_of_line = crlf
+end_of_line = lf
 insert_final_newline = true
 indent_style = space
-indent_size = 4
-
-[*.cs]
-csharp_style_namespace_declarations = file_scoped:error
-csharp_using_directive_placement = inside_namespace:error
-dotnet_sort_system_directives_first = true
-dotnet_separate_import_directive_groups = false
-dotnet_diagnostic.IDE0005.severity = error
-dotnet_diagnostic.IDE0065.severity = error
-csharp_style_prefer_primary_constructors = true:suggestion
-dotnet_diagnostic.IDE0290.severity = suggestion
+indent_size = 2
 
 [*.md]
 trim_trailing_whitespace = true
