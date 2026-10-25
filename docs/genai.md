@@ -368,3 +368,28 @@ the code or logic more complex instead of simpler.
 - Ran `dotnet test src/backend/BlaChallenge.slnx --no-build`; all 14 tests
   passed across the four test projects.
 - `git diff --check` reported no whitespace errors.
+
+## Documentation Review 007
+
+### Prompt
+
+The user asked whether controller endpoints and records should be grouped in
+`#region` blocks for readability and maintainability.
+
+### Output and corrections
+
+- Recommended against using `#region` blocks as the primary organization
+  mechanism because they can hide the file structure without improving
+  maintainability.
+- Recommended keeping small records that are exclusive to a controller beside
+  it, and moving records to separate files when they are reused or grow enough
+  to make the controller harder to read.
+- Documented the convention in `docs/contributing.md` and
+  `docs/implementation-plan.md`.
+
+### Validation
+
+- Confirmed the convention was not already explicitly documented before adding
+  it.
+- Reviewed the documentation changes for consistency with the existing backend
+  organization rules.

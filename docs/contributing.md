@@ -48,3 +48,11 @@ Use English for branch names, commit messages, PR titles, and PR descriptions.
   validation, initialization, inheritance, or overall logic more complex.
 - Apply this convention to C# code under `src/backend` and document notable
   exceptions in the surrounding code or review record when useful.
+
+## API File Organization
+
+- Do not use `#region` blocks as the primary way to organize controllers.
+- Keep small request and response records next to a controller when they are
+  specific to its endpoints and remain easy to understand.
+- Move records to separate files when they are reused by multiple endpoints or
+  become large enough to make the controller harder to read.

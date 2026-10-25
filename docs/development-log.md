@@ -150,3 +150,13 @@ focused on significant work, decisions, and verification results.
   --no-restore`, and `git diff --check` successfully.
 - Verified `dotnet test src/backend/BlaChallenge.slnx --no-build`: 14 tests
   passed across the four test projects.
+
+## Documentation Review 007
+
+- Documented that `#region` blocks should not be used as the primary way to
+  organize API controllers.
+- Documented that small endpoint-specific request and response records may
+  remain beside their controller, while reused or growing records should move
+  to separate files.
+- Added the convention to `docs/contributing.md` and
+  `docs/implementation-plan.md`.

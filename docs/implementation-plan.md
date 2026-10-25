@@ -48,6 +48,10 @@ Classes should prefer primary constructors when they simplify dependency
 initialization and readability. Traditional constructors remain appropriate
 when the primary-constructor form would make validation, initialization,
 inheritance, or other logic more complex.
+Controllers should remain organized by normal file order rather than `#region`
+blocks. Small endpoint-specific request and response records may live beside
+the controller; move them to separate files when they are reused or make the
+controller harder to read.
 
 The frontend remains to be added:
 
