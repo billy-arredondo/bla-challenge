@@ -26,12 +26,12 @@ corresponding test projects. The current project dependencies are:
 - API references Application and Infrastructure.
 - Each test project references the production project it tests.
 
-The backend scaffold builds with SDK `10.0.402` with zero warnings and zero
-errors. The four test projects use xUnit and Coverlet, but contain no test cases;
-`dotnet test` currently reports no tests available. The API host registers
-controllers and development-only OpenAPI generation, but no business endpoints
-are implemented. Domain, Application, and Infrastructure have no implementation
-classes yet. The frontend has not been scaffolded.
+The backend implementation currently includes a `User` domain entity,
+registration and login use cases, SQLite user persistence, PBKDF2 password
+hashing, JWT Bearer authentication, and authentication controllers. The four
+test projects use xUnit and Coverlet and contain domain, application,
+infrastructure, and API tests for this iteration. The task model and CRUD
+endpoints are not implemented. The frontend has not been scaffolded.
 
 The frontend remains to be added:
 
@@ -51,10 +51,10 @@ implemented or approved decisions.
 
 | Area | Status | Decision or open question |
 | --- | --- | --- |
-| Persistence | Proposed | Use SQLite with `Microsoft.Data.Sqlite` and parameterized SQL. This avoids Entity Framework and Dapper, both prohibited by the challenge. Confirmation is still required before implementation. |
-| API organization | Proposed | Use one ASP.NET API host with separate controllers for authentication/users and tasks. The challenge's reference to a “second API” is ambiguous; confirm whether separate services are required. No business controllers exist yet. |
-| Authentication | Pending | Choose either JWT Bearer authentication or cookie authentication. Registration and login are required; the mechanism and token/session lifecycle have not been selected. |
-| Authorization | Proposed | Tasks should be private to their owning user. A user may access, change, or delete only that user's tasks. Confirm whether roles, sharing, or administrative access are out of scope. |
+| Persistence | Confirmed | Use SQLite with `Microsoft.Data.Sqlite` and parameterized SQL. This avoids Entity Framework and Dapper, both prohibited by the challenge. The current iteration initializes a `Users` table at API startup. |
+| API organization | Confirmed | Use one ASP.NET API host with separate controllers for authentication/users and tasks. The current iteration implements the authentication controller; task controllers remain pending. The challenge's reference to a “second API” is treated as an endpoint grouping rather than a separate service. |
+| Authentication | Confirmed | Use JWT Bearer authentication. Registration and login are implemented; the signing key is supplied through configuration outside the repository. |
+| Authorization | Confirmed | Tasks will be private to their owning user. The current iteration demonstrates protected access with `/api/auth/me`; task ownership enforcement remains pending with task CRUD. |
 | Task status | Pending | Define the allowed statuses. `Pending`, `InProgress`, and `Completed` are candidate values, not a confirmed contract. |
 | Description and due date | Pending | Confirm whether description and due date are optional or required, and whether past due dates are allowed. The challenge requires these task fields but does not define their validation rules. |
 | Frontend | Proposed | Use React with Vite for the responsive CRUD frontend. Confirm this choice or select another framework before scaffolding `src/frontend/`. |
@@ -74,26 +74,22 @@ current scaffold:
 
 ## Implementation sequence
 
-1. **Confirm scope and rules:** write the informal user story and acceptance
-   criteria for registration, login, authorization, and task CRUD. Resolve the
-   pending authentication, API-boundary, status, and field-validation decisions.
-2. **Maintain the backend foundation:** the Domain, Application, Infrastructure,
-   API, and matching test project scaffolding is complete, and build/test commands
-   have been verified. Add meaningful tests alongside each implemented use case.
-3. **Implement the backend incrementally with TDD:** begin with the confirmed
-   domain rules, then implement the data access layer with SQLite and
-   parameterized SQL, application use cases, authentication, authorization, and
-   API behavior. Add tests before or alongside each use case.
-4. **Define and implement the API contract:** use appropriate HTTP verbs,
-   parameters, status codes, validation errors, and protected/public routes for
-   user and task operations.
-5. **Scaffold and integrate the frontend:** after the framework is confirmed,
+1. **Current iteration complete:** implemented registration, login, SQLite user
+   storage, password hashing, JWT generation, public `ping`, and protected `me`
+   endpoints with tests across the layers.
+2. **Define the task scope:** write the informal user story and acceptance
+   criteria for task CRUD. Resolve the pending task status, description, and
+   due-date validation decisions.
+3. **Implement task functionality with TDD:** add the task domain model, data
+   access layer, application use cases, ownership checks, and API contract using
+   SQLite and parameterized SQL. Add tests before or alongside each use case.
+4. **Scaffold and integrate the frontend:** after the framework is confirmed,
    implement responsive authentication and task CRUD screens, including
    validation, loading, empty, and error states.
-6. **Verify the demo:** seed data and credentials; check the complete user flow,
+5. **Verify the demo:** seed data and credentials; check the complete user flow,
    authorization boundaries, invalid input, authentication failures, and tests
    for data access, business logic, and API endpoints.
-7. **Prepare delivery:** document reproducible setup/start commands, finalize
+6. **Prepare delivery:** document reproducible setup/start commands, finalize
    architecture notes, and prepare a concise presentation with the user story,
    design choices, technical architecture, GenAI review evidence, and working
    demo.

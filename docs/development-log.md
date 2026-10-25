@@ -56,3 +56,32 @@ focused on significant work, decisions, and verification results.
 - Kept authentication mechanism, task status values, and description/due-date
   validation pending human confirmation.
 - No application code or runtime validation was performed during this review.
+
+## Authentication Iteration 001
+
+- Implemented the first functional backend slice: user registration, password
+  hashing, login, JWT generation, a public `ping` endpoint, and a protected
+  `me` endpoint. Task CRUD and the frontend remain pending.
+- Confirmed SQLite with `Microsoft.Data.Sqlite`, parameterized SQL, one API host,
+  JWT Bearer authentication, and private-user authorization as the current
+  implementation decisions. The JWT signing key is supplied outside the
+  repository through configuration.
+- Added the `User` domain entity, Application authentication contracts and use
+  cases, SQLite initialization and repository code, PBKDF2 password hashing,
+  JWT token creation, API dependency injection, and authentication controller.
+- Added xUnit tests for domain validation, application behavior, SQLite
+  persistence, public/protected API behavior, registration, login, and invalid
+  credentials. The first application test run failed because the contracts did
+  not exist yet; implementation then made the tests pass.
+- The first full test run exposed SQLite file-lock failures during cleanup.
+  Clearing SQLite connection pools before deleting temporary test databases
+  corrected the test teardown.
+- Verified `dotnet build src/backend/BlaChallenge.slnx`: succeeded with zero
+  warnings and zero errors.
+- Verified `dotnet test src/backend/BlaChallenge.slnx`: 13 tests passed across
+  the four test projects.
+- Ran the API process with a temporary SQLite path and an externally supplied
+  JWT key. The live smoke test returned `200` for `/api/auth/ping` and
+  `/openapi/v1.json`; temporary database and log files were removed afterward.
+- Next steps are task domain and CRUD functionality, task ownership tests,
+  frontend selection/integration, and seeded demo data.
