@@ -1,12 +1,11 @@
+namespace BlaChallenge.Application.Tests;
+
 using BlaChallenge.Application.Users.Abstractions;
 using BlaChallenge.Application.Users.Commands.LoginUser;
 using BlaChallenge.Application.Users.Commands.RegisterUser;
-using BlaChallenge.Application.Users.Contracts;
 using BlaChallenge.Application.Users.Exceptions;
 using BlaChallenge.Application.Users.Queries.GetCurrentUser;
 using BlaChallenge.Domain;
-
-namespace BlaChallenge.Application.Tests;
 
 public sealed class AuthenticationTests
 {

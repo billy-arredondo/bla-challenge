@@ -1,6 +1,6 @@
-using BlaChallenge.Infrastructure.Authentication;
-
 namespace BlaChallenge.Infrastructure.Tests;
+
+using BlaChallenge.Infrastructure.Authentication;
 
 public sealed class PasswordHasherTests
 {

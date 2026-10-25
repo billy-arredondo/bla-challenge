@@ -1,9 +1,9 @@
+namespace BlaChallenge.Infrastructure.Sqlite;
+
 using BlaChallenge.Application.Users.Abstractions;
 using BlaChallenge.Application.Users.Exceptions;
 using BlaChallenge.Domain;
 using Microsoft.Data.Sqlite;
-
-namespace BlaChallenge.Infrastructure.Sqlite;
 
 public sealed class SqliteUserRepository : IUserRepository
 {

@@ -1,8 +1,8 @@
+namespace BlaChallenge.Infrastructure.Tests;
+
 using BlaChallenge.Domain;
 using BlaChallenge.Infrastructure.Sqlite;
 using Microsoft.Data.Sqlite;
-
-namespace BlaChallenge.Infrastructure.Tests;
 
 public sealed class SqliteUserRepositoryTests : IAsyncLifetime
 {

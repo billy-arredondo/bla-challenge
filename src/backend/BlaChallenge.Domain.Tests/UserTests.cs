@@ -1,6 +1,6 @@
-using BlaChallenge.Domain;
-
 namespace BlaChallenge.Domain.Tests;
+
+using BlaChallenge.Domain;
 
 public sealed class UserTests
 {

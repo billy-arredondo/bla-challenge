@@ -1,11 +1,10 @@
+namespace BlaChallenge.Api.Tests;
+
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Data.Sqlite;
-
-namespace BlaChallenge.Api.Tests;
 
 public sealed class AuthenticationApiTests : IAsyncLifetime
 {

@@ -1,11 +1,10 @@
+namespace BlaChallenge.Infrastructure;
+
 using BlaChallenge.Application.Users.Abstractions;
 using BlaChallenge.Infrastructure.Authentication;
 using BlaChallenge.Infrastructure.Sqlite;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-
-namespace BlaChallenge.Infrastructure;
 
 public static class DependencyInjection
 {

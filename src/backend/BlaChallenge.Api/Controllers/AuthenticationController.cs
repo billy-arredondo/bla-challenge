@@ -1,3 +1,5 @@
+namespace BlaChallenge.Api.Controllers;
+
 using System.Security.Claims;
 using BlaChallenge.Application.Users.Commands.LoginUser;
 using BlaChallenge.Application.Users.Commands.RegisterUser;
@@ -6,8 +8,6 @@ using BlaChallenge.Application.Users.Exceptions;
 using BlaChallenge.Application.Users.Queries.GetCurrentUser;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
-namespace BlaChallenge.Api.Controllers;
 
 [ApiController]
 [Route("api/auth")]

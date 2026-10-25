@@ -1,6 +1,6 @@
-using BlaChallenge.Domain;
-
 namespace BlaChallenge.Application.Users.Abstractions;
+
+using BlaChallenge.Domain;
 
 public interface IUserRepository
 {

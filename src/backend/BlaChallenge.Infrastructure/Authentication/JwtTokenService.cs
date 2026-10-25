@@ -1,3 +1,5 @@
+namespace BlaChallenge.Infrastructure.Authentication;
+
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -5,8 +7,6 @@ using BlaChallenge.Application.Users.Abstractions;
 using BlaChallenge.Domain;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-
-namespace BlaChallenge.Infrastructure.Authentication;
 
 public sealed class JwtOptions
 {

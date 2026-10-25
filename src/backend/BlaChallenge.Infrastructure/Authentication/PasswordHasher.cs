@@ -1,7 +1,7 @@
+namespace BlaChallenge.Infrastructure.Authentication;
+
 using System.Security.Cryptography;
 using BlaChallenge.Application.Users.Abstractions;
-
-namespace BlaChallenge.Infrastructure.Authentication;
 
 public sealed class PasswordHasher : IPasswordHasher
 {

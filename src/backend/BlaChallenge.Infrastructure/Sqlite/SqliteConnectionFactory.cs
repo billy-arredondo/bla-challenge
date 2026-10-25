@@ -1,6 +1,6 @@
-using Microsoft.Data.Sqlite;
-
 namespace BlaChallenge.Infrastructure.Sqlite;
+
+using Microsoft.Data.Sqlite;
 
 public sealed class SqliteConnectionFactory
 {
