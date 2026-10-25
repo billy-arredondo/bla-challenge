@@ -1,7 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using BlaChallenge.Application.Authentication;
+using BlaChallenge.Application.Users;
 using BlaChallenge.Domain;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

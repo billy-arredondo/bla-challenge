@@ -1,4 +1,6 @@
-using BlaChallenge.Application.Authentication;
+using BlaChallenge.Application.Users.Commands.LoginUser;
+using BlaChallenge.Application.Users.Commands.RegisterUser;
+using BlaChallenge.Application.Users.Queries.GetCurrentUser;
 using BlaChallenge.Infrastructure;
 using BlaChallenge.Infrastructure.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -12,6 +14,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddScoped<RegisterUserUseCase>();
 builder.Services.AddScoped<LoginUserUseCase>();
+builder.Services.AddScoped<GetCurrentUserUseCase>();
 
 var jwtOptions = new JwtOptions
 {

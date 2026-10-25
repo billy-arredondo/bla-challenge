@@ -1,4 +1,4 @@
-using BlaChallenge.Application.Authentication;
+using BlaChallenge.Application.Users;
 using BlaChallenge.Domain;
 using Microsoft.Data.Sqlite;
 
@@ -48,6 +48,31 @@ public sealed class SqliteUserRepository : IUserRepository
             WHERE Email = $email;
             """;
         command.Parameters.AddWithValue("$email", email);
+
+        await using var reader = await command.ExecuteReaderAsync(cancellationToken);
+        if (!await reader.ReadAsync(cancellationToken))
+        {
+            return null;
+        }
+
+        return User.Create(
+            Guid.Parse(reader.GetString(0)),
+            reader.GetString(1),
+            reader.GetString(2),
+            DateTime.Parse(reader.GetString(3), null, System.Globalization.DateTimeStyles.RoundtripKind));
+    }
+
+    public async Task<User?> FindByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        await using var connection = connectionFactory.Create();
+        await connection.OpenAsync(cancellationToken);
+        await using var command = connection.CreateCommand();
+        command.CommandText = """
+            SELECT Id, Email, PasswordHash, CreatedAtUtc
+            FROM Users
+            WHERE Id = $id;
+            """;
+        command.Parameters.AddWithValue("$id", id.ToString());
 
         await using var reader = await command.ExecuteReaderAsync(cancellationToken);
         if (!await reader.ReadAsync(cancellationToken))

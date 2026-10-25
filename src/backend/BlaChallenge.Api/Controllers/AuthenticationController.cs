@@ -1,5 +1,8 @@
 using System.Security.Claims;
-using BlaChallenge.Application.Authentication;
+using BlaChallenge.Application.Users;
+using BlaChallenge.Application.Users.Commands.LoginUser;
+using BlaChallenge.Application.Users.Commands.RegisterUser;
+using BlaChallenge.Application.Users.Queries.GetCurrentUser;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,11 +14,16 @@ public sealed class AuthenticationController : ControllerBase
 {
     private readonly RegisterUserUseCase registerUser;
     private readonly LoginUserUseCase loginUser;
+    private readonly GetCurrentUserUseCase getCurrentUser;
 
-    public AuthenticationController(RegisterUserUseCase registerUser, LoginUserUseCase loginUser)
+    public AuthenticationController(
+        RegisterUserUseCase registerUser,
+        LoginUserUseCase loginUser,
+        GetCurrentUserUseCase getCurrentUser)
     {
         this.registerUser = registerUser;
         this.loginUser = loginUser;
+        this.getCurrentUser = getCurrentUser;
     }
 
     [AllowAnonymous]
@@ -31,7 +39,7 @@ public sealed class AuthenticationController : ControllerBase
         try
         {
             var result = await registerUser.ExecuteAsync(
-                new RegisterUserRequest(request.Email, request.Password), cancellationToken);
+                new RegisterUserCommand(request.Email, request.Password), cancellationToken);
             return Created($"api/auth/users/{result.User.Id}", result.User);
         }
         catch (InvalidUserInputException exception)
@@ -53,7 +61,7 @@ public sealed class AuthenticationController : ControllerBase
         try
         {
             var result = await loginUser.ExecuteAsync(
-                new BlaChallenge.Application.Authentication.LoginRequest(request.Email, request.Password), cancellationToken);
+                new LoginUserCommand(request.Email, request.Password), cancellationToken);
             return Ok(new LoginResponse(result.User, result.AccessToken));
         }
         catch (InvalidUserInputException)
@@ -68,11 +76,15 @@ public sealed class AuthenticationController : ControllerBase
 
     [Authorize]
     [HttpGet("me")]
-    public IActionResult Me()
+    public async Task<ActionResult<UserResponse>> Me(CancellationToken cancellationToken)
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        var email = User.FindFirstValue(ClaimTypes.Email);
-        return Ok(new { id = userId, email });
+        if (!Guid.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out var userId))
+        {
+            return Unauthorized();
+        }
+
+        var user = await getCurrentUser.ExecuteAsync(new GetCurrentUserQuery(userId), cancellationToken);
+        return user is null ? NotFound() : Ok(user);
     }
 
     public sealed record RegisterRequest(string Email, string Password);

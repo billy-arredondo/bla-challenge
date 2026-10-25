@@ -1,4 +1,6 @@
-namespace BlaChallenge.Application.Authentication;
+namespace BlaChallenge.Application.Users.Commands.LoginUser;
+
+using BlaChallenge.Application.Users.Commands.RegisterUser;
 
 public sealed class LoginUserUseCase
 {
@@ -17,14 +19,14 @@ public sealed class LoginUserUseCase
     }
 
     public async Task<LoginResult> ExecuteAsync(
-        LoginRequest request,
+        LoginUserCommand command,
         CancellationToken cancellationToken = default)
     {
-        var email = RegisterUserUseCase.NormalizeEmail(request.Email);
-        RegisterUserUseCase.ValidatePassword(request.Password);
+        var email = RegisterUserUseCase.NormalizeEmail(command.Email);
+        RegisterUserUseCase.ValidatePassword(command.Password);
         var user = await userRepository.FindByEmailAsync(email, cancellationToken);
 
-        if (user is null || !passwordHasher.Verify(request.Password, user.PasswordHash))
+        if (user is null || !passwordHasher.Verify(command.Password, user.PasswordHash))
         {
             throw new InvalidCredentialsException();
         }

@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using BlaChallenge.Domain;
 
-namespace BlaChallenge.Application.Authentication;
+namespace BlaChallenge.Application.Users.Commands.RegisterUser;
 
 public sealed class RegisterUserUseCase
 {
@@ -17,18 +17,18 @@ public sealed class RegisterUserUseCase
     }
 
     public async Task<RegisterUserResult> ExecuteAsync(
-        RegisterUserRequest request,
+        RegisterUserCommand command,
         CancellationToken cancellationToken = default)
     {
-        var email = NormalizeEmail(request.Email);
-        ValidatePassword(request.Password);
+        var email = NormalizeEmail(command.Email);
+        ValidatePassword(command.Password);
 
         if (await userRepository.FindByEmailAsync(email, cancellationToken) is not null)
         {
             throw new DuplicateUserException(email);
         }
 
-        var user = User.Create(Guid.NewGuid(), email, passwordHasher.Hash(request.Password), clock.UtcNow);
+        var user = User.Create(Guid.NewGuid(), email, passwordHasher.Hash(command.Password), clock.UtcNow);
         await userRepository.AddAsync(user, cancellationToken);
 
         return new RegisterUserResult(ToResponse(user));

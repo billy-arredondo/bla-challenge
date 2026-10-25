@@ -1,5 +1,5 @@
 using System.Security.Cryptography;
-using BlaChallenge.Application.Authentication;
+using BlaChallenge.Application.Users;
 
 namespace BlaChallenge.Infrastructure.Authentication;
 

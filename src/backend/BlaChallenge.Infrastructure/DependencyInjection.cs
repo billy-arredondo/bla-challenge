@@ -1,4 +1,4 @@
-using BlaChallenge.Application.Authentication;
+using BlaChallenge.Application.Users;
 using BlaChallenge.Infrastructure.Authentication;
 using BlaChallenge.Infrastructure.Sqlite;
 using Microsoft.Extensions.Configuration;

@@ -1,12 +1,14 @@
 using BlaChallenge.Domain;
 
-namespace BlaChallenge.Application.Authentication;
+namespace BlaChallenge.Application.Users;
 
 public interface IUserRepository
 {
     Task AddAsync(User user, CancellationToken cancellationToken = default);
 
     Task<User?> FindByEmailAsync(string email, CancellationToken cancellationToken = default);
+
+    Task<User?> FindByIdAsync(Guid id, CancellationToken cancellationToken = default);
 }
 
 public interface IPasswordHasher
@@ -25,10 +27,6 @@ public interface IClock
 {
     DateTime UtcNow { get; }
 }
-
-public sealed record RegisterUserRequest(string Email, string Password);
-
-public sealed record LoginRequest(string Email, string Password);
 
 public sealed record UserResponse(Guid Id, string Email, DateTime CreatedAtUtc);
 

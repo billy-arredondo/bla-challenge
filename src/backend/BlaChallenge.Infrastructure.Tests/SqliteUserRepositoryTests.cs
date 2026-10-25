@@ -30,11 +30,13 @@ public sealed class SqliteUserRepositoryTests : IAsyncLifetime
 
         await repository.AddAsync(user);
         var result = await repository.FindByEmailAsync("user@example.com");
+        var resultById = await repository.FindByIdAsync(user.Id);
 
         Assert.NotNull(result);
         Assert.Equal(user.Id, result.Id);
         Assert.Equal(user.Email, result.Email);
         Assert.Equal(user.PasswordHash, result.PasswordHash);
+        Assert.Equal(user.Id, resultById!.Id);
     }
 
     [Fact]
@@ -43,7 +45,7 @@ public sealed class SqliteUserRepositoryTests : IAsyncLifetime
         var user = User.Create(Guid.NewGuid(), "user@example.com", "stored-hash", DateTime.UtcNow);
         await repository.AddAsync(user);
 
-        await Assert.ThrowsAsync<BlaChallenge.Application.Authentication.DuplicateUserException>(() => repository.AddAsync(
+        await Assert.ThrowsAsync<BlaChallenge.Application.Users.DuplicateUserException>(() => repository.AddAsync(
             User.Create(Guid.NewGuid(), "USER@example.com", "other-hash", DateTime.UtcNow)));
     }
 }
