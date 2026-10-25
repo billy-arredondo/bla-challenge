@@ -4,7 +4,12 @@ This document records how generative AI was used during repository setup, scaffo
 
 ## Scope So Far
 
-Work so far includes repository workflow automation and backend scaffolding. The repository contains a .NET 10 solution with Domain, Application, Infrastructure, API, and four matching xUnit test projects. No frontend, database, authentication, business use cases, or test cases are implemented yet.
+Work so far includes repository workflow automation, backend scaffolding, and
+the first authentication slice. The repository contains a .NET 10 solution with
+Domain, Application, Infrastructure, API, and four matching xUnit test projects.
+User registration, SQLite user persistence, password hashing, JWT authentication,
+and authentication tests are implemented. Task functionality and the frontend
+are not implemented yet.
 
 ## Tooling and Review Policy
 
@@ -38,8 +43,9 @@ solution is named `BlaChallenge.slnx` and is located under `src/backend/`.
 
 The structure was deliberately kept independent of the task-management example
 in the challenge. The API host and its test project were added after the initial
-three layers. The frontend remains a next step; the current implementation is
-still only the backend foundation.
+three layers. The frontend and task functionality remain next steps; the current
+implementation contains the backend foundation and the first authentication use
+cases.
 
 ## Prompts and Outcomes
 
@@ -172,3 +178,68 @@ on `docs/challenge.md`, followed by an update to the project documentation.
 No application code, configuration, tests, or runtime validations were created
 or performed during this documentation review. Pending decisions require human
 confirmation before they become project commitments.
+
+## Authentication Iteration 001
+
+### User prompt
+
+The user requested implementation of the first functional backend iteration for
+BLA Challenge after reviewing `AGENTS.md`, `docs/challenge.md`,
+`docs/implementation-plan.md`, `docs/development-log.md`, this file, and
+`README.md`. The requested scope was user registration and authentication only,
+with .NET 10, Clean Architecture, one controller-based API host, SQLite through
+`Microsoft.Data.Sqlite` with parameterized SQL, JWT Bearer authentication, xUnit
+TDD, OpenAPI, and no Entity Framework, Dapper, or Mediator. The user also
+required continuous updates to the project documentation and explicitly said
+not to implement tasks or the frontend.
+
+No additional user prompts were used to make technical decisions during this
+iteration.
+
+### Proposals, decisions, and implementation
+
+- The implementation used a `User` domain entity, Application interfaces and
+  use cases, a SQLite repository and initializer, and API controllers. This was
+  accepted because it preserves the existing inward-facing project references.
+- Passwords are stored as PBKDF2-derived hashes with random salts and compared
+  using a fixed-time comparison. Plaintext passwords are not persisted.
+- JWT configuration requires a key supplied outside the repository and at least
+  32 characters long. No secret or demo credential was added to source control.
+- The challenge's ambiguous “second API” wording was handled as separate
+  authentication endpoints in the existing single API host. No second service
+  was introduced.
+
+Representative implemented code (`BlaChallenge.Infrastructure/Authentication/PasswordHasher.cs`):
+
+```csharp
+var salt = RandomNumberGenerator.GetBytes(SaltSize);
+var hash = Rfc2898DeriveBytes.Pbkdf2(password, salt, Iterations, HashAlgorithmName.SHA256, KeySize);
+return $"v1.{Iterations}.{Convert.ToBase64String(salt)}.{Convert.ToBase64String(hash)}";
+```
+
+### Corrections and validation
+
+- The initial application test run failed to compile because the authentication
+  contracts and use cases had not been implemented. Those were added before the
+  next run.
+- A test assertion initially accessed the registration result at the wrong
+  level; it was corrected to use the nested user response.
+- The first full test run found temporary SQLite database files still locked
+  during teardown because connection pooling was active. Tests now clear SQLite
+  pools before deleting temporary databases.
+- `dotnet build src/backend/BlaChallenge.slnx` passed with zero warnings and zero
+  errors.
+- `dotnet test src/backend/BlaChallenge.slnx` passed 13 tests across Domain,
+  Application, Infrastructure, and API test projects.
+- API integration tests verified public ping, unauthorized protected access,
+  registration, login, JWT-authenticated `me`, and invalid-password handling.
+
+### Limitations and pending work
+
+- A live API process smoke test was performed with a temporary SQLite path and
+  an externally supplied JWT key. It returned `200` for `/api/auth/ping` and
+  `/openapi/v1.json`; temporary files were removed afterward.
+- Scalar UI was not added; the existing development-only OpenAPI document remains
+  available at `/openapi/v1.json`.
+- Task models, task CRUD, ownership enforcement for task records, frontend
+  integration, seeded demo data, and presentation materials remain pending.
