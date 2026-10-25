@@ -17,7 +17,14 @@ src/backend/
 ```
 
 The solution currently contains the three production projects and their
-corresponding test projects. The API and frontend have not been scaffolded yet.
+corresponding test projects. The current project dependencies are:
+
+- Application references Domain.
+- Infrastructure references Application and Domain.
+- Each test project references the production project it tests.
+
+The backend scaffolding builds successfully with the current .NET SDK. The API
+and frontend have not been scaffolded yet.
 
 The following projects remain to be added:
 
@@ -47,7 +54,8 @@ placeholders. Confirm the solution format when selecting the .NET SDK.
 1. **Define scope:** write the informal user story and acceptance criteria for
    registration, login, and task CRUD.
 2. **Complete scaffolding:** add the API and API test projects, then set up the
-   frontend; verify the actual build and test commands.
+   frontend; verify the actual build and test commands. The initial Domain,
+   Application, Infrastructure, and test project scaffolding is complete.
 3. **Implement the backend incrementally with TDD:** start with a complete use
    case, then cover persistence, business rules, authentication, and API behavior.
    Do not use Entity Framework, Dapper, or Mediator.
