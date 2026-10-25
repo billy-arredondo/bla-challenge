@@ -107,7 +107,9 @@ The plugin is located at `.opencode/plugins/branch-commands-model.js` and applie
 
 The dynamic model-selection plugin has passed JavaScript syntax validation, but its OpenCode hook behavior has not yet been verified in a live OpenCode `1.19.4` session. The commands should therefore be tested after restarting OpenCode.
 
-Future entries will document generated application code, test results, authentication decisions, and any corrections made during implementation.
+Future entries will continue documenting generated application code, test
+results, authentication decisions, and any corrections made during
+implementation.
 
 ## Documentation Review 001
 
@@ -260,6 +262,9 @@ application operations and recording it as a repository guideline in `docs/`.
 - Recorded the rule in `docs/contributing.md` and reflected the current layout
   in `docs/implementation-plan.md`.
 
+This was the intermediate layout recorded before the subsequent operation-folder
+refactor in Documentation Review 004.
+
 ### Validation
 
 - Ran `dotnet restore src/backend/BlaChallenge.slnx` successfully.
@@ -285,6 +290,10 @@ the rule documented in the repository.
   preserving the existing public type names and behavior.
 - Updated the current repository guidance in `docs/contributing.md` and
   `docs/implementation-plan.md`.
+
+This review superseded the intermediate flat operation layout recorded in
+Documentation Review 003. The current convention is one folder per operation,
+with the conventional file names described above.
 
 ### Validation
 
