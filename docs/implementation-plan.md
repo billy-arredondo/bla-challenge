@@ -40,6 +40,11 @@ each operation has its own folder with conventional `Command.cs`, `Query.cs`,
 and `UseCase.cs` files as applicable. Use cases are invoked directly by the API;
 no Mediator or generic dispatcher is used.
 
+C# files use file-scoped namespaces on the first line, followed by a blank line
+and ordered, necessary `using` directives. The root `.editorconfig` applies
+these rules to the backend and other repository content, enforcing file-scoped
+namespaces, using placement, sorting, and removal of unnecessary imports.
+
 The frontend remains to be added:
 
 ```text

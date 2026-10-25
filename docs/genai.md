@@ -272,7 +272,6 @@ refactor in Documentation Review 004.
   zero warnings and zero errors.
 - Ran `dotnet test src/backend/BlaChallenge.slnx --no-build`; all 14 tests passed
   across the four test projects.
-- Confirmed no old operation-specific namespaces remain under `src/backend/`.
 
 ## Documentation Review 004
 
@@ -304,3 +303,36 @@ with the conventional file names described above.
   across the four test projects.
 - Confirmed the Application operation files use the documented folder and file
   naming convention.
+
+## Documentation Review 005
+
+### Prompt
+
+The user requested a repository-wide C# convention requiring the namespace on
+the first line, followed by a blank line and ordered, necessary `using`
+directives, with enforcement through `.editorconfig` or equivalent tooling. The
+scope of the root `.editorconfig` also needed to be documented explicitly.
+
+### Output and corrections
+
+- Added the root `.editorconfig` with file-scoped namespace, using placement,
+  sorting, and unused-import diagnostics.
+- Clarified that the root `.editorconfig` intentionally applies to the backend
+  and other repository content rather than being limited to `src/backend`.
+- Applied the layout to backend production and test files and removed unused
+  imports identified by formatting.
+- Converted the API `Program.cs` top-level statements to an explicit
+  `Program.Main` entry point because C# does not allow a namespace declaration
+  before top-level statements.
+- Documented the convention, the `dotnet format` verification command, and the
+  configuration file location and scope in `docs/contributing.md` and
+  `docs/implementation-plan.md`.
+
+### Validation
+
+- Ran `dotnet format src/backend/BlaChallenge.slnx --no-restore` successfully.
+- Ran `dotnet build src/backend/BlaChallenge.slnx --no-restore` successfully with
+  zero warnings and zero errors.
+- Ran `dotnet test src/backend/BlaChallenge.slnx --no-build`; all 14 tests passed
+  across the four test projects.
+- `git diff --check` reported no whitespace errors.

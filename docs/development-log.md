@@ -114,3 +114,20 @@ focused on significant work, decisions, and verification results.
   with zero warnings and zero errors.
 - Verified `dotnet test src/backend/BlaChallenge.slnx --no-build`: 14 tests passed
   across the four test projects.
+
+## Documentation Review 005
+
+- Added the root `.editorconfig` with C# rules for file-scoped namespaces,
+  namespace-first layout, ordered imports, and unused-import diagnostics.
+- Clarified that the root `.editorconfig` is intentionally repository-wide and
+  applies the C# layout rules to `src/backend`.
+- Applied the convention across backend production and test projects, removing
+  unused `using` directives and converting `Program.cs` from top-level statements
+  to an explicit `Program.Main` entry point so it follows the same layout.
+- Documented the convention and `dotnet format` verification command in
+  `docs/contributing.md` and `docs/implementation-plan.md`, including the
+  configuration file location and scope.
+- Verified `dotnet build src/backend/BlaChallenge.slnx --no-restore`: succeeded
+  with zero warnings and zero errors.
+- Verified `dotnet test src/backend/BlaChallenge.slnx --no-build`: 14 tests passed
+  across the four test projects.

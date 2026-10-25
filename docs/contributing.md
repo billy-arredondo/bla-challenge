@@ -28,3 +28,14 @@ Use English for branch names, commit messages, PR titles, and PR descriptions.
 - Within an operation folder, use the conventional file names `Command.cs`,
   `Query.cs`, and `UseCase.cs` as applicable. Keep descriptive operation names
   in the containing folder and in the type names.
+
+## C# File Layout
+
+- Put the file-scoped `namespace` declaration on the first line of every `.cs`
+  file.
+- Leave one blank line after the namespace, then place the ordered `using`
+  directives.
+- Keep only required `using` directives; the root `.editorconfig` marks
+  unnecessary imports as errors and sorts system directives first.
+- Run `dotnet format src/backend/BlaChallenge.slnx --no-restore
+  --verify-no-changes` before submitting changes.
