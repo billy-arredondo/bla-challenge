@@ -39,3 +39,12 @@ Use English for branch names, commit messages, PR titles, and PR descriptions.
   unnecessary imports as errors and sorts system directives first.
 - Run `dotnet format src/backend/BlaChallenge.slnx --no-restore
   --verify-no-changes` before submitting changes.
+
+## Primary Constructors
+
+- Prefer primary constructors for classes when they simplify dependency
+  initialization and keep the class easier to read.
+- Use a traditional constructor when a primary constructor would make the
+  validation, initialization, inheritance, or overall logic more complex.
+- Apply this convention to C# code under `src/backend` and document notable
+  exceptions in the surrounding code or review record when useful.

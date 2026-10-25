@@ -14,6 +14,8 @@ dotnet_sort_system_directives_first = true
 dotnet_separate_import_directive_groups = false
 dotnet_diagnostic.IDE0005.severity = error
 dotnet_diagnostic.IDE0065.severity = error
+csharp_style_prefer_primary_constructors = true:suggestion
+dotnet_diagnostic.IDE0290.severity = suggestion
 
 [*.md]
 trim_trailing_whitespace = true

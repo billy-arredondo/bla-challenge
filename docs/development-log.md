@@ -131,3 +131,22 @@ focused on significant work, decisions, and verification results.
   with zero warnings and zero errors.
 - Verified `dotnet test src/backend/BlaChallenge.slnx --no-build`: 14 tests passed
   across the four test projects.
+
+## Documentation Review 006
+
+- Added a repository convention to prefer primary constructors for backend
+  classes when they simplify dependency initialization and readability.
+- Converted suitable application, infrastructure, and API classes to primary
+  constructors without changing their public behavior.
+- Kept traditional constructors for the `User` domain entity, configuration
+  and exception types, and other cases where the primary-constructor form would
+  make validation, initialization, or behavior less clear.
+- Documented the convention and its justified exception in
+  `docs/contributing.md` and `docs/implementation-plan.md`.
+- Updated the root `.editorconfig` with the primary-constructor style
+  preference and its suggestion-level diagnostic.
+- Verified `dotnet format src/backend/BlaChallenge.slnx --no-restore
+  --verify-no-changes`, `dotnet build src/backend/BlaChallenge.slnx
+  --no-restore`, and `git diff --check` successfully.
+- Verified `dotnet test src/backend/BlaChallenge.slnx --no-build`: 14 tests
+  passed across the four test projects.

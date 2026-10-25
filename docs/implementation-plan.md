@@ -44,6 +44,10 @@ C# files use file-scoped namespaces on the first line, followed by a blank line
 and ordered, necessary `using` directives. The root `.editorconfig` applies
 these rules to the backend and other repository content, enforcing file-scoped
 namespaces, using placement, sorting, and removal of unnecessary imports.
+Classes should prefer primary constructors when they simplify dependency
+initialization and readability. Traditional constructors remain appropriate
+when the primary-constructor form would make validation, initialization,
+inheritance, or other logic more complex.
 
 The frontend remains to be added:
 

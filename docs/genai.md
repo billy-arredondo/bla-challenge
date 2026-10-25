@@ -336,3 +336,35 @@ scope of the root `.editorconfig` also needed to be documented explicitly.
 - Ran `dotnet test src/backend/BlaChallenge.slnx --no-build`; all 14 tests passed
   across the four test projects.
 - `git diff --check` reported no whitespace errors.
+
+## Documentation Review 006
+
+### Prompt
+
+The user requested a convention affecting `src/backend` and `docs`: classes
+should use primary constructors whenever possible, except when that would make
+the code or logic more complex instead of simpler.
+
+### Output and corrections
+
+- Inspected backend production and test classes before changing constructors.
+- Converted suitable dependency-injected classes in Application, Infrastructure,
+  and API to primary constructors.
+- Kept traditional constructors or existing declarations for the `User` domain
+  entity, configuration and exception types, and classes where primary
+  constructors would obscure validation, initialization, inheritance, or logic.
+- Added `csharp_style_prefer_primary_constructors = true:suggestion` and the
+  suggestion-level `IDE0290` diagnostic to the root `.editorconfig`.
+- Documented the convention and its exception criteria in
+  `docs/contributing.md` and `docs/implementation-plan.md`.
+
+### Validation
+
+- Reviewed the changed constructors and their dependency usage manually.
+- Ran `dotnet format src/backend/BlaChallenge.slnx --no-restore
+  --verify-no-changes` successfully.
+- Ran `dotnet build src/backend/BlaChallenge.slnx --no-restore` successfully
+  with zero warnings and zero errors.
+- Ran `dotnet test src/backend/BlaChallenge.slnx --no-build`; all 14 tests
+  passed across the four test projects.
+- `git diff --check` reported no whitespace errors.
