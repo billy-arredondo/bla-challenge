@@ -1,1 +1,12 @@
-<Solution />
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="BlaChallenge.Application/BlaChallenge.Application.csproj" Id="f83f181a-bf9c-462f-96bd-7996212656ea" />
+    <Project Path="BlaChallenge.Domain/BlaChallenge.Domain.csproj" Id="8e1146ae-c169-4645-bdb4-40012a27f2c5" />
+    <Project Path="BlaChallenge.Infrastructure/BlaChallenge.Infrastructure.csproj" Id="ff6e86cb-ca3f-486b-aaff-9babb63fcb08" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="BlaChallenge.Application.Tests/BlaChallenge.Application.Tests.csproj" Id="030809cc-9a03-412d-a9e0-c3e2ea12f1b7" />
+    <Project Path="BlaChallenge.Domain.Tests/BlaChallenge.Domain.Tests.csproj" Id="fb6de3d9-897c-4e19-b2c2-deae11b4491e" />
+    <Project Path="BlaChallenge.Infrastructure.Tests/BlaChallenge.Infrastructure.Tests.csproj" Id="57767820-92de-452b-b37d-214dde2bbb5c" />
+  </Folder>
+</Solution>
