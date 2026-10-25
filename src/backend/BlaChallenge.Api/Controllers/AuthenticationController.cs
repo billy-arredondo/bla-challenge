@@ -1,7 +1,8 @@
 using System.Security.Claims;
-using BlaChallenge.Application.Users;
 using BlaChallenge.Application.Users.Commands.LoginUser;
 using BlaChallenge.Application.Users.Commands.RegisterUser;
+using BlaChallenge.Application.Users.Contracts;
+using BlaChallenge.Application.Users.Exceptions;
 using BlaChallenge.Application.Users.Queries.GetCurrentUser;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

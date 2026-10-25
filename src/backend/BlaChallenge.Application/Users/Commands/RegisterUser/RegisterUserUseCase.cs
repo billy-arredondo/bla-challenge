@@ -1,5 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using BlaChallenge.Domain;
+using BlaChallenge.Application.Users.Abstractions;
+using BlaChallenge.Application.Users.Contracts;
+using BlaChallenge.Application.Users.Exceptions;
 
 namespace BlaChallenge.Application.Users.Commands.RegisterUser;
 

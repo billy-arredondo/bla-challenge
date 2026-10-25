@@ -1,4 +1,5 @@
-using BlaChallenge.Application.Users;
+using BlaChallenge.Application.Users.Abstractions;
+using BlaChallenge.Application.Users.Exceptions;
 using BlaChallenge.Domain;
 using Microsoft.Data.Sqlite;
 

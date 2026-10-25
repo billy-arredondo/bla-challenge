@@ -1,5 +1,8 @@
 namespace BlaChallenge.Application.Users.Queries.GetCurrentUser;
 
+using BlaChallenge.Application.Users.Abstractions;
+using BlaChallenge.Application.Users.Contracts;
+
 public sealed class GetCurrentUserUseCase
 {
     private readonly IUserRepository userRepository;

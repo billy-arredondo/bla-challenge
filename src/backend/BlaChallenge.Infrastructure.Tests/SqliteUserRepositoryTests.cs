@@ -45,7 +45,7 @@ public sealed class SqliteUserRepositoryTests : IAsyncLifetime
         var user = User.Create(Guid.NewGuid(), "user@example.com", "stored-hash", DateTime.UtcNow);
         await repository.AddAsync(user);
 
-        await Assert.ThrowsAsync<BlaChallenge.Application.Users.DuplicateUserException>(() => repository.AddAsync(
+        await Assert.ThrowsAsync<BlaChallenge.Application.Users.Exceptions.DuplicateUserException>(() => repository.AddAsync(
             User.Create(Guid.NewGuid(), "USER@example.com", "other-hash", DateTime.UtcNow)));
     }
 }

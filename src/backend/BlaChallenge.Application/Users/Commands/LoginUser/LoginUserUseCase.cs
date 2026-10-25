@@ -1,6 +1,9 @@
 namespace BlaChallenge.Application.Users.Commands.LoginUser;
 
+using BlaChallenge.Application.Users.Abstractions;
 using BlaChallenge.Application.Users.Commands.RegisterUser;
+using BlaChallenge.Application.Users.Contracts;
+using BlaChallenge.Application.Users.Exceptions;
 
 public sealed class LoginUserUseCase
 {
