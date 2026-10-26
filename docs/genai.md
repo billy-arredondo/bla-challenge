@@ -663,3 +663,28 @@ documentation when the new organization affected the documented architecture.
   again using the exact staged line ranges.
 - Ran Prettier on all split stylesheets.
 - Verified `pnpm lint`, `pnpm build`, and `git diff --check` successfully.
+
+## Documentation Review 016
+
+### Prompt
+
+The user asked to proceed with the challenge-compliance plan after reviewing the
+repository. The requested corrections were the frontend timezone issue, Admin
+task assignment flow, reproducible frontend/demo instructions, user story, and
+presentation preparation.
+
+### Output and review
+
+- Added `toDateTimeLocal` and used it for task editor defaults and existing task
+  values so editing a due date preserves the represented instant.
+- Allowed Admins to read the user directory for assignment while retaining
+  Superadmin-only account creation and role changes.
+- Added `docs/user-story.md` and `docs/presentation.md`, and corrected stale
+  repository guidance and README statements about the frontend.
+
+### Validation and corrections
+
+- Added an API assertion covering Admin user lookup in the existing assignment
+  integration test.
+- Ran `pnpm lint`, `pnpm build`, `dotnet restore`, `dotnet build --no-restore`,
+  `dotnet test --no-build`, and `git diff --check` successfully.
