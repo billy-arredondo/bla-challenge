@@ -1,6 +1,6 @@
 # Task Manager Challenge
 
-A task management application is being built for the .NET technical interview challenge. The backend implements user registration, JWT authentication, role-based task management, and SQLite persistence; the frontend remains pending.
+A task management application for the .NET technical interview challenge. The solution includes a .NET API, SQLite persistence, JWT authentication, role-based task management, and a responsive React frontend.
 
 ## Challenge requirements
 
@@ -18,10 +18,11 @@ See [`docs/challenge.md`](docs/challenge.md) for the complete requirements.
 
 ## Repository status
 
-- `src/backend/BlaChallenge.slnx` contains four .NET 10 projects: Domain, Application, Infrastructure, and an ASP.NET Core API host.
+- `src/backend/BlaChallenge.slnx` contains four .NET 10 production projects: Domain, Application, Infrastructure, and an ASP.NET Core API host, plus matching test projects.
 - Each production project has a matching xUnit test project, with Coverlet configured. Tests cover domain validation, application use cases, SQLite persistence, and authentication endpoints.
-- The API exposes public registration/login/ping endpoints, a protected `me` endpoint, protected task endpoints, and Superadmin-only user management endpoints. SQLite initializes and migrates the `Users` and `Tasks` tables at startup.
-- The frontend remains to be selected and implemented. A configurable Superadmin credential seed is available; task demo data is still pending.
+- The API exposes public registration/login/ping endpoints, a protected `me` endpoint, protected task endpoints, Admin/Superadmin user lookup for assignment, and Superadmin-only user creation and role-management endpoints. SQLite initializes and migrates the `Users` and `Tasks` tables at startup.
+- `src/frontend` contains the React/Vite application with authentication, task CRUD, role-aware assignment, user management, loading/error states, and responsive light/dark themes.
+- A configurable Superadmin credential seed is available. The demo flow and credentials are documented below; task records can be created through the UI or API.
 
 Project dependencies and the next implementation steps are documented in the [implementation plan](docs/implementation-plan.md).
 
@@ -42,6 +43,7 @@ Project dependencies and the next implementation steps are documented in the [im
 - Package restore requires access to the configured NuGet package sources.
 - Set a development-only JWT signing key outside the repository. It must contain at least 32 characters.
 - Optionally set `Superadmin:Email` and `Superadmin:Password` outside the repository to seed an idempotent Superadmin account.
+- Install Node.js 22 or later and pnpm for the frontend.
 
 ### Build and test
 
@@ -84,6 +86,27 @@ The key must contain at least 32 characters. The issuer, audience, and token
 expiration can be overridden through the `Jwt` configuration section; the
 defaults are `BlaChallenge`, `BlaChallenge.Client`, and 60 minutes.
 
+### Run the frontend
+
+With the API running on `http://localhost:5278`, start a second terminal:
+
+```sh
+cd src/frontend
+pnpm install
+pnpm dev
+```
+
+Open the Vite URL shown in the terminal, normally `http://localhost:5173`.
+The development proxy forwards `/api` requests to the HTTP API. Set
+`VITE_API_URL` when the API runs at another address.
+
+Validate the frontend before the demo:
+
+```sh
+pnpm lint
+pnpm build
+```
+
 The API endpoints implemented in this iteration are:
 
 - `GET /api/auth/ping`: public health-style endpoint.
@@ -110,7 +133,25 @@ dotnet dev-certs https --trust
 dotnet run --project src/backend/BlaChallenge.Api --launch-profile https
 ```
 
-The HTTPS profile uses `https://localhost:7226` and `http://localhost:5278`. Database initialization and the optional Superadmin seed are automatic; frontend setup and task seed data remain pending.
+The HTTPS profile uses `https://localhost:7226` and `http://localhost:5278`. Database initialization and the optional Superadmin seed are automatic.
+
+### Demo credentials and flow
+
+The API does not contain a password or signing key. Configure local demo
+credentials before starting it:
+
+```powershell
+$env:Jwt__Key = "local-demo-signing-key-with-at-least-32-characters"
+$env:Superadmin__Email = "superadmin@example.com"
+$env:Superadmin__Password = "superadmin123"
+```
+
+The Superadmin account is created or promoted idempotently at startup. Use it
+to create an Admin and a User from the Users screen. Public registration can
+also create a normal User with any valid email and a password of at least eight
+characters. The complete presentation walkthrough is in
+[`docs/presentation.md`](docs/presentation.md), and the informal user story is
+in [`docs/user-story.md`](docs/user-story.md).
 
 ### Test the authentication and task endpoints
 
