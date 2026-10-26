@@ -80,7 +80,7 @@ implemented or approved decisions.
 | Area | Status | Decision or open question |
 | --- | --- | --- |
 | Persistence | Confirmed | Use SQLite with `Microsoft.Data.Sqlite` and parameterized SQL. This avoids Entity Framework and Dapper, both prohibited by the challenge. The current iteration initializes a `Users` table at API startup. |
-| API organization | Confirmed | Use one ASP.NET API host with separate controllers for authentication/users and tasks. The current iteration implements the authentication controller; task controllers remain pending. The challenge's reference to a “second API” is treated as an endpoint grouping rather than a separate service. |
+| API organization | Confirmed | Use one ASP.NET API host with separate controllers for authentication/users and tasks. The challenge's reference to a “second API” is treated as an endpoint grouping rather than a separate service. |
 | Authentication | Confirmed | Use JWT Bearer authentication. Registration and login are implemented; the signing key is supplied through configuration outside the repository. |
 | Authorization | Confirmed | Users see and modify assigned tasks subject to state rules. Admins and Superadmins can manage all tasks; only Superadmins can manage users. |
 | Roles | Confirmed | JWT roles are `User`, `Admin`, and `Superadmin`. Public registration creates `User`; Superadmin seeding is configuration-driven. |

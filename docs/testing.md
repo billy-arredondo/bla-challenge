@@ -80,7 +80,7 @@ before cleanup.
 | [`TasksApiTests.cs`](../src/backend/BlaChallenge.Api.Tests/TasksApiTests.cs) | `User_cannot_access_another_users_task` | A user cannot read or delete another user's task; the API returns `404 Not Found`. |
 | [`TasksApiTests.cs`](../src/backend/BlaChallenge.Api.Tests/TasksApiTests.cs) | `Invalid_task_title_returns_bad_request` | An invalid task title returns `400 Bad Request`. |
 | [`TasksApiTests.cs`](../src/backend/BlaChallenge.Api.Tests/TasksApiTests.cs) | `User_cannot_modify_completed_task` | A User cannot delete or modify a task after it reaches `Completed`. |
-| [`TasksApiTests.cs`](../src/backend/BlaChallenge.Api.Tests/TasksApiTests.cs) | `Superadmin_can_create_admin_and_admin_can_assign_task_to_user` | Superadmin user management and Admin assignment work through the API. |
+| [`TasksApiTests.cs`](../src/backend/BlaChallenge.Api.Tests/TasksApiTests.cs) | `Superadmin_can_create_admin_and_admin_can_assign_task_to_user` | Superadmin user management, Admin user lookup, and Admin assignment work through the API. |
 
 ## Running The Tests
 

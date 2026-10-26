@@ -275,3 +275,14 @@ focused on significant work, decisions, and verification results.
 - Updated the frontend README, implementation plan, and testing notes to reflect
   the modular frontend structure and current validation status.
 - Verified `pnpm lint`, `pnpm build`, and `git diff --check` successfully.
+
+## Documentation Review 016
+
+- Corrected task editor date formatting so UTC API values are displayed as local
+  `datetime-local` values without timezone shifts during edit and save.
+- Allowed Admins to list users for task assignment while keeping account creation
+  and role changes restricted to Superadmins.
+- Added the informal user story and presentation walkthrough, and updated the
+  root setup instructions with frontend and demo credential steps.
+- Verified frontend lint/build, backend restore/build, 32 backend tests, and
+  `git diff --check` successfully.
