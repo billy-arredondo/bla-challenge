@@ -1,0 +1,58 @@
+﻿.user-layout {
+  grid-template-columns: 1.5fr 1fr;
+}
+
+.user-row {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 13px 0;
+  border-top: 1px solid var(--line);
+}
+
+.user-row div {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-row strong {
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-row small {
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 3px;
+}
+
+.user-row select {
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  color: var(--text);
+  background: var(--surface-low);
+  padding: 6px;
+  font-size: 11px;
+}
+
+.create-user {
+  display: grid;
+  align-content: start;
+  gap: 16px;
+}
+
+.create-user h2 {
+  margin-bottom: 4px;
+}
+
+.alert {
+  padding: 11px 12px;
+  border-radius: 7px;
+  font-size: 12px;
+}
+
+.alert.error {
+  color: var(--red);
+  background: var(--red-soft);
+}

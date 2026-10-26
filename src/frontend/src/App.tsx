@@ -1,7 +1,7 @@
 import { SessionHydrator } from "./app/SessionHydrator";
 import { AppRoutes } from "./app/AppRoutes";
 import { ThemeSync } from "./app/ThemeSync";
-import "./App.css";
+import "./styles/index.css";
 
 function App() {
   return (

@@ -31,6 +31,7 @@ pages and data access in one component:
 - `src/components` contains reusable visual building blocks.
 - `src/lib` contains API access, contracts, constants, and formatting utilities.
 - `src/stores` contains independent session, theme, and permission modules.
+- `src/styles` contains design tokens, layout, shared components, feature styles, and responsive rules.
 
 Components and functions use multiline formatting so rendering, event handling,
 and data operations remain easy to scan and test independently.
