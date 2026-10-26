@@ -3,6 +3,7 @@ namespace BlaChallenge.Api;
 using System.Text;
 using System.Text.Json.Serialization;
 using BlaChallenge.Application.Users.Commands.LoginUser;
+using BlaChallenge.Application.Users.Commands.ManageUsers;
 using BlaChallenge.Application.Users.Commands.RegisterUser;
 using BlaChallenge.Application.Users.Queries.GetCurrentUser;
 using BlaChallenge.Infrastructure;
@@ -23,6 +24,7 @@ public partial class Program
         builder.Services.AddScoped<RegisterUserUseCase>();
         builder.Services.AddScoped<LoginUserUseCase>();
         builder.Services.AddScoped<GetCurrentUserUseCase>();
+        builder.Services.AddScoped<ManageUsersUseCase>();
         builder.Services.AddScoped<CreateTaskUseCase>();
         builder.Services.AddScoped<GetTasksUseCase>();
         builder.Services.AddScoped<GetTaskByIdUseCase>();
@@ -73,7 +75,14 @@ public partial class Program
         app.UseAuthentication();
         app.UseAuthorization();
 
-        await app.Services.GetRequiredService<BlaChallenge.Infrastructure.Sqlite.SqliteDatabaseInitializer>().InitializeAsync();
+        var initializer = app.Services.GetRequiredService<BlaChallenge.Infrastructure.Sqlite.SqliteDatabaseInitializer>();
+        await initializer.InitializeAsync();
+        var superadminEmail = builder.Configuration["Superadmin:Email"];
+        var superadminPassword = builder.Configuration["Superadmin:Password"];
+        if (!string.IsNullOrWhiteSpace(superadminEmail) && !string.IsNullOrWhiteSpace(superadminPassword))
+        {
+            await initializer.SeedSuperadminAsync(superadminEmail, superadminPassword);
+        }
 
         app.MapControllers();
 

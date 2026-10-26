@@ -18,6 +18,8 @@ public sealed class TasksApiTests : IAsyncLifetime
         {
             builder.UseSetting("ConnectionStrings:Default", $"Data Source={databasePath}");
             builder.UseSetting("Jwt:Key", "development-only-key-that-is-at-least-32-chars");
+            builder.UseSetting("Superadmin:Email", "superadmin@example.com");
+            builder.UseSetting("Superadmin:Password", "superadmin123");
         });
         client = factory.CreateClient();
         return Task.CompletedTask;
@@ -68,7 +70,7 @@ public sealed class TasksApiTests : IAsyncLifetime
         {
             title = "Prepare interview",
             description = (string?)null,
-            status = "Completed",
+            status = "InProgress",
             dueDateUtc = request.dueDateUtc
         });
         Assert.Equal(HttpStatusCode.OK, updateResponse.StatusCode);
@@ -120,17 +122,92 @@ public sealed class TasksApiTests : IAsyncLifetime
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
+    [Fact]
+    public async Task User_cannot_modify_completed_task()
+    {
+        await AuthenticateAsync($"completed-{Guid.NewGuid():N}@example.com");
+        var createResponse = await client.PostAsJsonAsync("/api/tasks", new
+        {
+            title = "Complete me",
+            description = (string?)null,
+            status = "Pending",
+            dueDateUtc = DateTime.UtcNow.AddDays(1)
+        });
+        var created = await createResponse.Content.ReadFromJsonAsync<TaskResponse>();
+
+        var inProgressResponse = await client.PutAsJsonAsync($"/api/tasks/{created!.Id}", new
+        {
+            title = "Complete me",
+            description = (string?)null,
+            status = "InProgress",
+            dueDateUtc = DateTime.UtcNow.AddDays(1)
+        });
+        Assert.Equal(HttpStatusCode.OK, inProgressResponse.StatusCode);
+
+        var completedResponse = await client.PutAsJsonAsync($"/api/tasks/{created.Id}", new
+        {
+            title = "Complete me",
+            description = (string?)null,
+            status = "Completed",
+            dueDateUtc = DateTime.UtcNow.AddDays(1)
+        });
+        Assert.Equal(HttpStatusCode.OK, completedResponse.StatusCode);
+        Assert.Equal(HttpStatusCode.Forbidden, (await client.DeleteAsync($"/api/tasks/{created.Id}")).StatusCode);
+    }
+
+    [Fact]
+    public async Task Superadmin_can_create_admin_and_admin_can_assign_task_to_user()
+    {
+        await AuthenticateExistingAsync("superadmin@example.com", "superadmin123");
+        var adminEmail = $"admin-{Guid.NewGuid():N}@example.com";
+        var adminResponse = await client.PostAsJsonAsync("/api/users", new
+        {
+            email = adminEmail,
+            password = "password123",
+            role = "Admin"
+        });
+        Assert.Equal(HttpStatusCode.Created, adminResponse.StatusCode);
+        var admin = await adminResponse.Content.ReadFromJsonAsync<UserResponse>();
+
+        var userEmail = $"assigned-{Guid.NewGuid():N}@example.com";
+        var userResponse = await client.PostAsJsonAsync("/api/auth/register", new { email = userEmail, password = "password123" });
+        var user = await userResponse.Content.ReadFromJsonAsync<UserResponse>();
+
+        await AuthenticateExistingAsync(adminEmail, "password123");
+        var taskResponse = await client.PostAsJsonAsync("/api/tasks", new
+        {
+            title = "Assigned task",
+            description = (string?)null,
+            status = "Pending",
+            dueDateUtc = DateTime.UtcNow.AddDays(1),
+            assignedToId = user!.Id
+        });
+        Assert.Equal(HttpStatusCode.Created, taskResponse.StatusCode);
+        var task = await taskResponse.Content.ReadFromJsonAsync<TaskResponse>();
+        Assert.Equal(user.Id, task!.AssignedToId);
+
+        await AuthenticateExistingAsync(userEmail, "password123");
+        var userTasks = await client.GetFromJsonAsync<List<TaskResponse>>("/api/tasks");
+        Assert.Contains(userTasks!, item => item.Id == task.Id);
+        Assert.NotNull(admin);
+    }
+
     private async Task AuthenticateAsync(string email)
     {
         await client.PostAsJsonAsync("/api/auth/register", new { email, password = "password123" });
-        var loginResponse = await client.PostAsJsonAsync("/api/auth/login", new { email, password = "password123" });
+        await AuthenticateExistingAsync(email, "password123");
+    }
+
+    private async Task AuthenticateExistingAsync(string email, string password)
+    {
+        var loginResponse = await client.PostAsJsonAsync("/api/auth/login", new { email, password });
         var login = await loginResponse.Content.ReadFromJsonAsync<LoginResponse>();
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", login!.AccessToken);
     }
 
     private sealed record LoginResponse(UserResponse User, string AccessToken);
 
-    private sealed record UserResponse(Guid Id, string Email, DateTime CreatedAtUtc);
+    private sealed record UserResponse(Guid Id, string Email, DateTime CreatedAtUtc, string Role);
 
     private sealed record TaskResponse(
         Guid Id,
@@ -138,5 +215,9 @@ public sealed class TasksApiTests : IAsyncLifetime
         string? Description,
         string Status,
         DateTime DueDateUtc,
-        Guid OwnerId);
+        Guid OwnerId,
+        Guid CreatedById,
+        Guid AssignedToId,
+        Guid? UpdatedById,
+        DateTime? UpdatedAtUtc);
 }

@@ -8,6 +8,7 @@ using BlaChallenge.Application.Tasks.Contracts;
 using BlaChallenge.Application.Tasks.Exceptions;
 using BlaChallenge.Application.Tasks.Queries.GetTaskById;
 using BlaChallenge.Application.Tasks.Queries.GetTasks;
+using BlaChallenge.Application.Users.Exceptions;
 using BlaChallenge.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -35,11 +36,22 @@ public sealed class TasksController(
         try
         {
             var task = await createTask.ExecuteAsync(
-                new CreateTaskCommand(ownerId, request.Title, request.Description, request.Status, request.DueDateUtc),
+                new CreateTaskCommand(
+                    ownerId,
+                    request.Title,
+                    request.Description,
+                    request.Status,
+                    request.DueDateUtc,
+                    GetRole(),
+                    request.AssignedToId),
                 cancellationToken);
             return CreatedAtAction(nameof(GetById), new { id = task.Id }, task);
         }
         catch (ArgumentException exception)
+        {
+            return BadRequest(new { error = exception.Message });
+        }
+        catch (InvalidUserInputException exception)
         {
             return BadRequest(new { error = exception.Message });
         }
@@ -53,7 +65,7 @@ public sealed class TasksController(
             return Unauthorized();
         }
 
-        return Ok(await getTasks.ExecuteAsync(new GetTasksQuery(ownerId), cancellationToken));
+        return Ok(await getTasks.ExecuteAsync(new GetTasksQuery(ownerId, GetRole()), cancellationToken));
     }
 
     [HttpGet("{id:guid}")]
@@ -64,7 +76,7 @@ public sealed class TasksController(
             return Unauthorized();
         }
 
-        var task = await getTaskById.ExecuteAsync(new GetTaskByIdQuery(id, ownerId), cancellationToken);
+        var task = await getTaskById.ExecuteAsync(new GetTaskByIdQuery(id, ownerId, GetRole()), cancellationToken);
         return task is null ? NotFound() : Ok(task);
     }
 
@@ -82,13 +94,33 @@ public sealed class TasksController(
         try
         {
             var task = await updateTask.ExecuteAsync(
-                new UpdateTaskCommand(id, ownerId, request.Title, request.Description, request.Status, request.DueDateUtc),
+                new UpdateTaskCommand(
+                    id,
+                    ownerId,
+                    request.Title,
+                    request.Description,
+                    request.Status,
+                    request.DueDateUtc,
+                    GetRole(),
+                    request.AssignedToId),
                 cancellationToken);
             return Ok(task);
         }
         catch (TaskNotFoundException)
         {
             return NotFound();
+        }
+        catch (TaskForbiddenException exception)
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, new { error = exception.Message });
+        }
+        catch (InvalidOperationException exception)
+        {
+            return Conflict(new { error = exception.Message });
+        }
+        catch (InvalidUserInputException exception)
+        {
+            return BadRequest(new { error = exception.Message });
         }
         catch (ArgumentException exception)
         {
@@ -106,21 +138,29 @@ public sealed class TasksController(
 
         try
         {
-            await deleteTask.ExecuteAsync(new DeleteTaskCommand(id, ownerId), cancellationToken);
+            await deleteTask.ExecuteAsync(new DeleteTaskCommand(id, ownerId, GetRole()), cancellationToken);
             return NoContent();
         }
         catch (TaskNotFoundException)
         {
             return NotFound();
         }
+        catch (TaskForbiddenException exception)
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, new { error = exception.Message });
+        }
     }
 
     private bool TryGetUserId(out Guid userId)
         => Guid.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out userId);
 
+    private UserRole GetRole()
+        => Enum.TryParse<UserRole>(User.FindFirstValue(ClaimTypes.Role), out var role) ? role : UserRole.User;
+
     public sealed record TaskRequest(
         string Title,
         string? Description,
         TaskStatus Status,
-        DateTime DueDateUtc);
+        DateTime DueDateUtc,
+        Guid? AssignedToId = null);
 }

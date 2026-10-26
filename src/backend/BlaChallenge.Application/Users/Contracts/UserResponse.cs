@@ -1,3 +1,5 @@
 namespace BlaChallenge.Application.Users.Contracts;
 
-public sealed record UserResponse(Guid Id, string Email, DateTime CreatedAtUtc);
+using BlaChallenge.Domain;
+
+public sealed record UserResponse(Guid Id, string Email, DateTime CreatedAtUtc, UserRole Role);

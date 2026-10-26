@@ -48,5 +48,5 @@ public sealed class RegisterUserUseCase(
     }
 
     internal static UserResponse ToResponse(User user)
-        => new(user.Id, user.Email, user.CreatedAtUtc);
+        => new(user.Id, user.Email, user.CreatedAtUtc, user.Role);
 }

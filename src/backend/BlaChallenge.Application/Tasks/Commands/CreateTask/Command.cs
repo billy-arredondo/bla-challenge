@@ -7,4 +7,6 @@ public sealed record CreateTaskCommand(
     string Title,
     string? Description,
     TaskStatus Status,
-    DateTime DueDateUtc);
+    DateTime DueDateUtc,
+    UserRole ActorRole = UserRole.User,
+    Guid? AssignedToId = null);

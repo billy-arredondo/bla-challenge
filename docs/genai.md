@@ -8,8 +8,9 @@ Work so far includes repository workflow automation, backend scaffolding, and
 the first authentication slice. The repository contains a .NET 10 solution with
 Domain, Application, Infrastructure, API, and four matching xUnit test projects.
 User registration, SQLite user persistence, password hashing, JWT authentication,
-and authentication tests are implemented. Task functionality and the frontend
-are not implemented yet.
+role-based task management, and authentication/authorization tests are implemented.
+The frontend is implemented with feature modules and split styles; automated
+frontend behavior tests remain pending.
 
 ## Tooling and Review Policy
 
@@ -110,6 +111,47 @@ The dynamic model-selection plugin has passed JavaScript syntax validation, but 
 Future entries will continue documenting generated application code, test
 results, authentication decisions, and any corrections made during
 implementation.
+
+## Documentation Review 013
+
+### User prompt
+
+The user requested role-based task authorization with `User`, `Admin`, and
+`Superadmin` roles. Users create self-assigned tasks and can only read or modify
+their assigned tasks under the permitted statuses. Admins can assign and manage
+tasks for any user. Superadmins can create users and grant or revoke Admin
+privileges, but Superadmin privileges are immutable.
+
+### Generated implementation and corrections
+
+- Added domain roles, explicit task creator/assignee/update audit fields, and
+  `Canceled` status with terminal-state rules.
+- Added JWT role claims, SQLite role/audit persistence and migration, and a
+  configuration-driven idempotent Superadmin seed.
+- Added Superadmin-only user creation and role-management endpoints.
+- Corrected the initial task transition implementation after tests exposed that
+  `Pending -> Completed` was incorrectly accepted; valid transitions now include
+  `Pending -> InProgress`, `Pending -> Canceled`, `InProgress -> Completed`, and
+  `InProgress -> Canceled`.
+- Preserved `OwnerId` as a compatibility alias for `AssignedToId` while exposing
+  the explicit audit fields in the task response.
+
+### Validation
+
+- Ran `dotnet build src/backend/BlaChallenge.slnx --no-restore`: zero warnings and
+  zero errors.
+- Ran `dotnet test src/backend/BlaChallenge.slnx --no-build`: 32 tests passed.
+- Ran `dotnet format src/backend/BlaChallenge.slnx --no-restore --verify-no-changes`.
+- Added API tests for terminal completed tasks and Superadmin/Admin assignment.
+
+### Edge cases and limitations
+
+- Public registration always creates `User`; Superadmin management cannot create
+  or modify another Superadmin.
+- Existing SQLite databases receive new role and audit columns and old task owner
+  values are copied into creator and assignee fields.
+- Existing JWTs do not change when a user's role changes; the user must log in
+  again to receive a token with the new role claim.
 
 ## Task Management Iteration 001
 
@@ -536,3 +578,88 @@ documented test, allowing the inventory to use tables instead of bullet points.
 - Confirmed that all 26 test methods are represented and that the latest test
   run still reports 27 executed cases.
 - No application behavior or test implementation was changed.
+
+## Documentation Review 011
+
+### Prompt
+
+The user requested updating the documentation to indicate that the frontend
+designs were extracted from Google Stitch.
+
+### Output and review
+
+- Updated `docs/design/README.md` to identify the Stitch HTML files as extracted
+  design references and preserve the screen mapping.
+- Recorded that the Stitch files are references rather than production frontend
+  code.
+- Added the corresponding entry to `docs/development-log.md`.
+
+### Validation
+
+- Reviewed the updated documentation for English wording and consistency with the
+  existing Stitch directory structure.
+- No application code or runtime behavior was changed.
+
+## Documentation Review 012
+
+### User preference
+
+The project structure and initial dependencies should be created manually rather
+than through prompts or automatically generated scaffolding. GenAI may assist
+with review, documentation, and implementation after the initial setup, but it
+should not replace the manual setup decision.
+
+### Validation
+
+- Recorded the preference in the GenAI process documentation.
+- No application code or runtime behavior was changed.
+
+## Documentation Review 014
+
+### Prompt
+
+The user requested implementation of the frontend plan after the backend gained
+role-based task authorization, assignment, terminal statuses, and Superadmin user
+management. The user also selected React Router, Zustand, TanStack Query, and Zod.
+
+### Output and review
+
+- Reviewed the updated controllers, domain rules, contracts, README, and design
+  references before implementation.
+- Implemented a React/Vite UI using the selected libraries, API-backed queries and
+  mutations, JWT session handling, role guards, Zod validation, and light/dark
+  theme persistence.
+- Adapted the Stitch references without presenting unavailable priority, tags,
+  comments, or project data as real API data.
+
+### Validation and corrections
+
+- Resolved the initial Windows pnpm symlink lock by reinstalling with the hoisted
+  node linker configuration.
+- Confirmed `pnpm build` succeeds. `pnpm lint` succeeds with two advisory React
+  warnings about the task editor's date initialization and query synchronization.
+
+## Documentation Review 015
+
+### Prompt
+
+The user requested subdividing the monolithic frontend stylesheet and updating
+documentation when the new organization affected the documented architecture.
+
+### Output and review
+
+- Split `App.css` into `src/frontend/src/styles/` files for tokens, layout,
+  shared components, dashboard, tasks, users, authentication, and responsive
+  rules.
+- Added `styles/index.css` as the single style entry point and preserved the
+  existing CSS selectors and visual language.
+- Updated the frontend README, implementation plan, and testing notes to match
+  the modular structure.
+
+### Validation and corrections
+
+- The first automated extraction used incorrect source line boundaries and
+  produced invalid CSS fragments. The staged stylesheet was restored and split
+  again using the exact staged line ranges.
+- Ran Prettier on all split stylesheets.
+- Verified `pnpm lint`, `pnpm build`, and `git diff --check` successfully.

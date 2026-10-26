@@ -87,6 +87,12 @@ public sealed class AuthenticationTests
 
         public Task<User?> FindByIdAsync(Guid id, CancellationToken cancellationToken = default)
             => Task.FromResult(ExistingUser?.Id == id ? ExistingUser : null);
+
+        public Task<IReadOnlyList<User>> GetAllAsync(CancellationToken cancellationToken = default)
+            => Task.FromResult<IReadOnlyList<User>>(ExistingUser is null ? [] : [ExistingUser]);
+
+        public Task UpdateRoleAsync(User user, CancellationToken cancellationToken = default)
+            => Task.CompletedTask;
     }
 
     private sealed class FakePasswordHasher : IPasswordHasher

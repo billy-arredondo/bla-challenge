@@ -8,4 +8,8 @@ public sealed record TaskResponse(
     string? Description,
     TaskStatus Status,
     DateTime DueDateUtc,
-    Guid OwnerId);
+    Guid OwnerId,
+    Guid CreatedById,
+    Guid AssignedToId,
+    Guid? UpdatedById,
+    DateTime? UpdatedAtUtc);

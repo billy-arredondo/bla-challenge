@@ -2,12 +2,13 @@ namespace BlaChallenge.Domain;
 
 public sealed class User
 {
-    private User(Guid id, string email, string passwordHash, DateTime createdAtUtc)
+    private User(Guid id, string email, string passwordHash, DateTime createdAtUtc, UserRole role)
     {
         Id = id;
         Email = email;
         PasswordHash = passwordHash;
         CreatedAtUtc = createdAtUtc;
+        Role = role;
     }
 
     public Guid Id { get; }
@@ -18,7 +19,14 @@ public sealed class User
 
     public DateTime CreatedAtUtc { get; }
 
-    public static User Create(Guid id, string email, string passwordHash, DateTime createdAtUtc)
+    public UserRole Role { get; private set; }
+
+    public static User Create(
+        Guid id,
+        string email,
+        string passwordHash,
+        DateTime createdAtUtc,
+        UserRole role = UserRole.User)
     {
         if (id == Guid.Empty)
         {
@@ -35,6 +43,26 @@ public sealed class User
             throw new ArgumentException("Password hash is required.", nameof(passwordHash));
         }
 
-        return new User(id, email.Trim().ToLowerInvariant(), passwordHash, createdAtUtc);
+        if (!Enum.IsDefined(role))
+        {
+            throw new ArgumentException("User role is invalid.", nameof(role));
+        }
+
+        return new User(id, email.Trim().ToLowerInvariant(), passwordHash, createdAtUtc, role);
+    }
+
+    public void ChangeRole(UserRole role)
+    {
+        if (Role == UserRole.Superadmin || role == UserRole.Superadmin)
+        {
+            throw new InvalidOperationException("Superadmin privileges cannot be changed.");
+        }
+
+        if (!Enum.IsDefined(role))
+        {
+            throw new ArgumentException("User role is invalid.", nameof(role));
+        }
+
+        Role = role;
     }
 }

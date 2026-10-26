@@ -1,6 +1,7 @@
 namespace BlaChallenge.Infrastructure.Tests;
 
 using BlaChallenge.Domain;
+using BlaChallenge.Infrastructure.Authentication;
 using BlaChallenge.Infrastructure.Sqlite;
 using BlaChallenge.Infrastructure.Sqlite.Repositories;
 using Microsoft.Data.Sqlite;
@@ -15,7 +16,7 @@ public sealed class SqliteTaskRepositoryTests : IAsyncLifetime
     public async Task InitializeAsync()
     {
         var factory = new SqliteConnectionFactory($"Data Source={databasePath}");
-        await new SqliteDatabaseInitializer(factory).InitializeAsync();
+        await new SqliteDatabaseInitializer(factory, new PasswordHasher()).InitializeAsync();
         repository = new SqliteTaskRepository(factory);
         ownerId = Guid.NewGuid();
         otherOwnerId = Guid.NewGuid();
