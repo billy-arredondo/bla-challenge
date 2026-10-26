@@ -1,6 +1,24 @@
-# React + TypeScript + Vite
+# TaskPulse frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React/Vite frontend for the Bla Challenge task workspace. It uses React Router,
+Zustand, TanStack Query, and Zod and connects to the ASP.NET API under `/api`.
+
+## Development
+
+Start the API on `http://localhost:5278`, then run:
+
+```sh
+pnpm install
+pnpm dev
+```
+
+The Vite development server proxies `/api` to the API. Override the target with
+`VITE_API_URL` when required.
+
+```sh
+pnpm lint
+pnpm build
+```
 
 Currently, two official plugins are available:
 
