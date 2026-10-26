@@ -1,4 +1,4 @@
-namespace BlaChallenge.Infrastructure.Sqlite;
+namespace BlaChallenge.Infrastructure.Sqlite.Repositories;
 
 using BlaChallenge.Application.Users.Abstractions;
 using BlaChallenge.Application.Users.Exceptions;

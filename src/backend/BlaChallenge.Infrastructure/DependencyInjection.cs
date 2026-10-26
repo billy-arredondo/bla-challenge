@@ -4,6 +4,7 @@ using BlaChallenge.Application.Tasks.Abstractions;
 using BlaChallenge.Application.Users.Abstractions;
 using BlaChallenge.Infrastructure.Authentication;
 using BlaChallenge.Infrastructure.Sqlite;
+using BlaChallenge.Infrastructure.Sqlite.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
