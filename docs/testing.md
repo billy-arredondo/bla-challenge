@@ -30,8 +30,10 @@ a coverage threshold or report.
 | [`UserTests.cs`](../src/backend/BlaChallenge.Domain.Tests/UserTests.cs) | `Create_rejects_empty_email` | An empty email is rejected. |
 | [`TaskTests.cs`](../src/backend/BlaChallenge.Domain.Tests/TaskTests.cs) | `Create_trims_fields_and_preserves_status` | Task text fields are trimmed and the status is preserved. |
 | [`TaskTests.cs`](../src/backend/BlaChallenge.Domain.Tests/TaskTests.cs) | `Create_rejects_empty_title` | Empty and whitespace-only task titles are rejected. |
-| [`TaskTests.cs`](../src/backend/BlaChallenge.Domain.Tests/TaskTests.cs) | `Update_changes_all_mutable_fields` | Title, description, status, and due date can be updated. |
+| [`TaskTests.cs`](../src/backend/BlaChallenge.Domain.Tests/TaskTests.cs) | `Update_changes_all_mutable_fields` | Title, description, status, and due date can be updated through an allowed transition. |
 | [`TaskTests.cs`](../src/backend/BlaChallenge.Domain.Tests/TaskTests.cs) | `Create_rejects_unknown_status` | An unknown task status is rejected. |
+| [`TaskTests.cs`](../src/backend/BlaChallenge.Domain.Tests/TaskTests.cs) | `Update_rejects_pending_to_completed_transition` | Pending tasks cannot skip directly to Completed. |
+| [`TaskTests.cs`](../src/backend/BlaChallenge.Domain.Tests/TaskTests.cs) | `Canceled_task_cannot_be_modified` | Canceled tasks are terminal. |
 
 ### Application tests
 
@@ -77,6 +79,8 @@ before cleanup.
 | [`TasksApiTests.cs`](../src/backend/BlaChallenge.Api.Tests/TasksApiTests.cs) | `Authenticated_user_can_crud_own_task` | An authenticated user can create, read, list, update, and delete their own task. |
 | [`TasksApiTests.cs`](../src/backend/BlaChallenge.Api.Tests/TasksApiTests.cs) | `User_cannot_access_another_users_task` | A user cannot read or delete another user's task; the API returns `404 Not Found`. |
 | [`TasksApiTests.cs`](../src/backend/BlaChallenge.Api.Tests/TasksApiTests.cs) | `Invalid_task_title_returns_bad_request` | An invalid task title returns `400 Bad Request`. |
+| [`TasksApiTests.cs`](../src/backend/BlaChallenge.Api.Tests/TasksApiTests.cs) | `User_cannot_modify_completed_task` | A User cannot delete or modify a task after it reaches `Completed`. |
+| [`TasksApiTests.cs`](../src/backend/BlaChallenge.Api.Tests/TasksApiTests.cs) | `Superadmin_can_create_admin_and_admin_can_assign_task_to_user` | Superadmin user management and Admin assignment work through the API. |
 
 ## Running The Tests
 
@@ -91,13 +95,14 @@ dotnet test src/backend/BlaChallenge.slnx --no-build
 The API tests configure an isolated JWT key and temporary SQLite database, so
 they do not require a running API process or a repository database file.
 
-The latest run passed 28 test cases: 7 Domain, 8 Application, 4 Infrastructure,
-and 9 API cases. The Domain total is higher than the number of methods because
+The latest run passed 32 test cases: 9 Domain, 8 Application, 4 Infrastructure,
+and 11 API cases. The Domain total is higher than the number of methods because
 `Create_rejects_empty_title` is an xUnit theory with two inputs.
 
 ## Not Covered Yet
 
 - Frontend behavior, because the frontend has not been scaffolded.
+- Detailed user-management application tests and SQLite migration tests remain limited; API coverage verifies the primary Superadmin flow.
 - Browser-level or visual responsive tests.
 - Automatic seeded demo data and demo-credential verification.
 - A published line, branch, or mutation coverage target.

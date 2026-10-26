@@ -245,3 +245,12 @@ focused on significant work, decisions, and verification results.
 - Recorded the preference to create the project structure and initial
   dependencies manually rather than through prompts or automatically generated
   scaffolding.
+
+## Documentation Review 013
+
+- Implemented role-based authorization with `User`, `Admin`, and `Superadmin` roles.
+- Added task creator, assignee, and last-updated audit fields, plus `Canceled` status rules and terminal-state enforcement.
+- Added SQLite schema migration support, JWT role claims, Superadmin seeding from configuration, and Superadmin-only user/role management endpoints.
+- Updated task authorization so Users see only assigned tasks, while Admins and Superadmins can manage all non-canceled tasks and assign work to any user.
+- Added API coverage for completed-task restrictions and Superadmin/Admin assignment flow.
+- Verified `dotnet format src/backend/BlaChallenge.slnx --no-restore --verify-no-changes`, a zero-warning build, and 32 passing tests.

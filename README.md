@@ -1,6 +1,6 @@
 # Task Manager Challenge
 
-A task management application is being built for the .NET technical interview challenge. The backend implements user registration, JWT authentication, and user-owned task CRUD; the frontend remains pending.
+A task management application is being built for the .NET technical interview challenge. The backend implements user registration, JWT authentication, role-based task management, and SQLite persistence; the frontend remains pending.
 
 ## Challenge requirements
 
@@ -20,8 +20,8 @@ See [`docs/challenge.md`](docs/challenge.md) for the complete requirements.
 
 - `src/backend/BlaChallenge.slnx` contains four .NET 10 projects: Domain, Application, Infrastructure, and an ASP.NET Core API host.
 - Each production project has a matching xUnit test project, with Coverlet configured. Tests cover domain validation, application use cases, SQLite persistence, and authentication endpoints.
-- The API exposes public registration/login/ping endpoints, a protected `me` endpoint, and protected task CRUD endpoints. SQLite initializes the `Users` and `Tasks` tables at startup.
-- The frontend remains to be selected and implemented. Seeded task demo data and credentials are pending.
+- The API exposes public registration/login/ping endpoints, a protected `me` endpoint, protected task endpoints, and Superadmin-only user management endpoints. SQLite initializes and migrates the `Users` and `Tasks` tables at startup.
+- The frontend remains to be selected and implemented. A configurable Superadmin credential seed is available; task demo data is still pending.
 
 Project dependencies and the next implementation steps are documented in the [implementation plan](docs/implementation-plan.md).
 
@@ -41,6 +41,7 @@ Project dependencies and the next implementation steps are documented in the [im
 - Install the .NET 10 SDK. The current scaffold was verified with SDK `10.0.402`; no `global.json` pins an SDK version.
 - Package restore requires access to the configured NuGet package sources.
 - Set a development-only JWT signing key outside the repository. It must contain at least 32 characters.
+- Optionally set `Superadmin:Email` and `Superadmin:Password` outside the repository to seed an idempotent Superadmin account.
 
 ### Build and test
 
@@ -66,6 +67,8 @@ Before starting the API in PowerShell, configure the key for the current process
 
 ```powershell
 $env:Jwt__Key = "replace-with-a-local-random-key-of-at-least-32-characters"
+$env:Superadmin__Email = "superadmin@example.com"
+$env:Superadmin__Password = "replace-with-a-local-password-of-at-least-8-characters"
 dotnet run --project src/backend/BlaChallenge.Api --launch-profile http
 ```
 
@@ -87,13 +90,16 @@ The API endpoints implemented in this iteration are:
 - `POST /api/auth/register`: creates a user and returns `201 Created`.
 - `POST /api/auth/login`: validates credentials and returns a JWT.
 - `GET /api/auth/me`: protected endpoint requiring `Authorization: Bearer <token>`.
-- `POST /api/tasks`: creates an authenticated user's task. The owner is taken from the JWT, not the request body.
-- `GET /api/tasks`: lists only the authenticated user's tasks.
-- `GET /api/tasks/{id}`: gets one owned task, or returns `404` for a missing or another user's task.
-- `PUT /api/tasks/{id}`: updates an owned task.
-- `DELETE /api/tasks/{id}`: deletes an owned task.
+- `POST /api/tasks`: creates a task. Users are assigned automatically; Admins can choose any assigned user.
+- `GET /api/tasks`: lists assigned tasks for Users, or all tasks for Admins and Superadmins.
+- `GET /api/tasks/{id}`: gets an assigned task for Users, or any task for Admins and Superadmins.
+- `PUT /api/tasks/{id}`: updates a task according to role and status rules.
+- `DELETE /api/tasks/{id}`: physically deletes a task according to role and status rules.
+- `GET /api/users`: lists users for Superadmins.
+- `POST /api/users`: creates a User or Admin for Superadmins.
+- `PUT /api/users/{id}/role`: grants or removes Admin privileges for Superadmins.
 
-Task request fields are `title` (required, up to 200 characters), `description` (optional, up to 2,000 characters), `status` (`Pending`, `InProgress`, or `Completed`), and `dueDateUtc` (required ISO-8601 date). Due dates in the past are accepted to represent overdue tasks.
+Task request fields are `title` (required, up to 200 characters), `description` (optional, up to 2,000 characters), `status` (`Pending`, `InProgress`, `Completed`, or `Canceled`), `dueDateUtc` (required ISO-8601 date), and optional `assignedToId` for Admins. `Canceled` is terminal; `Completed` cannot be reopened. Due dates in the past are accepted to represent overdue tasks.
 
 The SQLite database is created as `bla-challenge.db` in the API working directory. The `Users` and `Tasks` tables are initialized automatically. Do not commit the database file or JWT key.
 
@@ -104,7 +110,7 @@ dotnet dev-certs https --trust
 dotnet run --project src/backend/BlaChallenge.Api --launch-profile https
 ```
 
-The HTTPS profile uses `https://localhost:7226` and `http://localhost:5278`. Database initialization is automatic; frontend setup, task seed data, and demo credentials will be documented as those features are implemented.
+The HTTPS profile uses `https://localhost:7226` and `http://localhost:5278`. Database initialization and the optional Superadmin seed are automatic; frontend setup and task seed data remain pending.
 
 ### Test the authentication and task endpoints
 
@@ -121,4 +127,4 @@ Invoke-RestMethod -Method Post -Uri http://localhost:5278/api/tasks -Headers $he
 Invoke-RestMethod -Method Get -Uri http://localhost:5278/api/tasks -Headers $headers
 ```
 
-The repository does not currently seed credentials or task records automatically. The commands above create disposable demo data locally; seed automation remains a delivery follow-up.
+The configured Superadmin is seeded automatically when both configuration values are present. Public registration always creates a `User`; only a Superadmin can create users or change Admin privileges. Never commit passwords, JWT keys, or the SQLite database.
