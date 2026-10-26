@@ -1,5 +1,6 @@
 namespace BlaChallenge.Infrastructure;
 
+using BlaChallenge.Application.Tasks.Abstractions;
 using BlaChallenge.Application.Users.Abstractions;
 using BlaChallenge.Infrastructure.Authentication;
 using BlaChallenge.Infrastructure.Sqlite;
@@ -16,6 +17,7 @@ public static class DependencyInjection
         services.AddSingleton(new SqliteConnectionFactory(connectionString));
         services.AddSingleton<SqliteDatabaseInitializer>();
         services.AddScoped<IUserRepository, SqliteUserRepository>();
+        services.AddScoped<ITaskRepository, SqliteTaskRepository>();
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
         services.AddSingleton<IClock, SystemClock>();
         services.AddSingleton<ITokenService, JwtTokenService>();

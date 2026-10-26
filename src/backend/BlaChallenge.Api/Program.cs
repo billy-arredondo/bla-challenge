@@ -1,6 +1,7 @@
 namespace BlaChallenge.Api;
 
 using System.Text;
+using System.Text.Json.Serialization;
 using BlaChallenge.Application.Users.Commands.LoginUser;
 using BlaChallenge.Application.Users.Commands.RegisterUser;
 using BlaChallenge.Application.Users.Queries.GetCurrentUser;
@@ -15,12 +16,18 @@ public partial class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.AddControllers();
+        builder.Services.AddControllers()
+            .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
         builder.Services.AddOpenApi();
         builder.Services.AddInfrastructure(builder.Configuration);
         builder.Services.AddScoped<RegisterUserUseCase>();
         builder.Services.AddScoped<LoginUserUseCase>();
         builder.Services.AddScoped<GetCurrentUserUseCase>();
+        builder.Services.AddScoped<CreateTaskUseCase>();
+        builder.Services.AddScoped<GetTasksUseCase>();
+        builder.Services.AddScoped<GetTaskByIdUseCase>();
+        builder.Services.AddScoped<UpdateTaskUseCase>();
+        builder.Services.AddScoped<DeleteTaskUseCase>();
 
         var jwtOptions = new JwtOptions
         {
