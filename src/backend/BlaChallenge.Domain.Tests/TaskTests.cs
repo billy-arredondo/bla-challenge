@@ -33,11 +33,11 @@ public sealed class TaskTests
         var task = TaskItem.Create(Guid.NewGuid(), Guid.NewGuid(), "old", null, TaskStatus.Pending, DateTime.UtcNow);
         var dueDate = DateTime.UtcNow.AddDays(1);
 
-        task.Update("new", "description", TaskStatus.Completed, dueDate);
+        task.Update("new", "description", TaskStatus.InProgress, dueDate);
 
         Assert.Equal("new", task.Title);
         Assert.Equal("description", task.Description);
-        Assert.Equal(TaskStatus.Completed, task.Status);
+        Assert.Equal(TaskStatus.InProgress, task.Status);
         Assert.Equal(dueDate, task.DueDateUtc);
     }
 
@@ -48,5 +48,24 @@ public sealed class TaskTests
             TaskItem.Create(Guid.NewGuid(), Guid.NewGuid(), "Task", null, (TaskStatus)99, DateTime.UtcNow));
 
         Assert.Equal("status", exception.ParamName);
+    }
+
+    [Fact]
+    public void Update_rejects_pending_to_completed_transition()
+    {
+        var task = TaskItem.Create(Guid.NewGuid(), Guid.NewGuid(), "Task", null, TaskStatus.Pending, DateTime.UtcNow);
+
+        Assert.Throws<InvalidOperationException>(() =>
+            task.Update("Task", null, TaskStatus.Completed, DateTime.UtcNow));
+    }
+
+    [Fact]
+    public void Canceled_task_cannot_be_modified()
+    {
+        var task = TaskItem.Create(Guid.NewGuid(), Guid.NewGuid(), "Task", null, TaskStatus.InProgress, DateTime.UtcNow);
+        task.Update("Task", null, TaskStatus.Canceled, DateTime.UtcNow);
+
+        Assert.Throws<InvalidOperationException>(() =>
+            task.Update("Changed", null, TaskStatus.Canceled, DateTime.UtcNow));
     }
 }

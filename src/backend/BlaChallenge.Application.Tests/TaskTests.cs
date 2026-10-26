@@ -63,6 +63,11 @@ public sealed class TaskTests
                     ? [Stored]
                     : []);
 
+        public Task<IReadOnlyList<BlaChallenge.Domain.TaskItem>> GetAllAsync(
+            CancellationToken cancellationToken = default)
+            => Task.FromResult<IReadOnlyList<BlaChallenge.Domain.TaskItem>>(
+                Stored is null ? [] : [Stored]);
+
         public Task<BlaChallenge.Domain.TaskItem?> FindByIdAsync(
             Guid id,
             Guid ownerId,
@@ -70,8 +75,19 @@ public sealed class TaskTests
             => Task.FromResult(Stored is { Id: var storedId, OwnerId: var storedOwnerId }
                 && storedId == id && storedOwnerId == ownerId ? Stored : null);
 
+        public Task<BlaChallenge.Domain.TaskItem?> FindByIdAsync(
+            Guid id,
+            CancellationToken cancellationToken = default)
+            => Task.FromResult(Stored is { Id: var storedId } && storedId == id ? Stored : null);
+
         public Task UpdateAsync(BlaChallenge.Domain.TaskItem task, CancellationToken cancellationToken = default)
             => Task.CompletedTask;
+
+        public Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            Stored = null;
+            return Task.CompletedTask;
+        }
 
         public Task DeleteAsync(Guid id, Guid ownerId, CancellationToken cancellationToken = default)
         {

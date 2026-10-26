@@ -10,6 +10,6 @@ public sealed class GetCurrentUserUseCase(IUserRepository userRepository)
         CancellationToken cancellationToken = default)
     {
         var user = await userRepository.FindByIdAsync(query.UserId, cancellationToken);
-        return user is null ? null : new UserResponse(user.Id, user.Email, user.CreatedAtUtc);
+        return user is null ? null : new UserResponse(user.Id, user.Email, user.CreatedAtUtc, user.Role);
     }
 }

@@ -4,14 +4,16 @@ public sealed class TaskItem
 {
     private TaskItem(
         Guid id,
-        Guid ownerId,
+        Guid createdById,
+        Guid assignedToId,
         string title,
         string? description,
         TaskStatus status,
         DateTime dueDateUtc)
     {
         Id = id;
-        OwnerId = ownerId;
+        CreatedById = createdById;
+        AssignedToId = assignedToId;
         Title = title;
         Description = description;
         Status = status;
@@ -20,7 +22,15 @@ public sealed class TaskItem
 
     public Guid Id { get; }
 
-    public Guid OwnerId { get; }
+    public Guid CreatedById { get; }
+
+    public Guid AssignedToId { get; private set; }
+
+    public Guid OwnerId => AssignedToId;
+
+    public Guid? UpdatedById { get; private set; }
+
+    public DateTime? UpdatedAtUtc { get; private set; }
 
     public string Title { get; private set; }
 
@@ -38,17 +48,63 @@ public sealed class TaskItem
         TaskStatus status,
         DateTime dueDateUtc)
     {
-        Validate(id, ownerId, title, description, status, dueDateUtc);
-        return new TaskItem(id, ownerId, title.Trim(), NormalizeDescription(description), status, dueDateUtc.ToUniversalTime());
+        return Create(id, ownerId, ownerId, title, description, status, dueDateUtc);
+    }
+
+    public static TaskItem Create(
+        Guid id,
+        Guid createdById,
+        Guid assignedToId,
+        string title,
+        string? description,
+        TaskStatus status,
+        DateTime dueDateUtc,
+        Guid? updatedById = null,
+        DateTime? updatedAtUtc = null)
+    {
+        Validate(id, assignedToId, title, description, status, dueDateUtc);
+        if (createdById == Guid.Empty)
+        {
+            throw new ArgumentException("Task creator id is required.", nameof(createdById));
+        }
+
+        var task = new TaskItem(
+            id,
+            createdById,
+            assignedToId,
+            title.Trim(),
+            NormalizeDescription(description),
+            status,
+            dueDateUtc.ToUniversalTime());
+        task.UpdatedById = updatedById;
+        task.UpdatedAtUtc = updatedAtUtc?.ToUniversalTime();
+        return task;
     }
 
     public void Update(string title, string? description, TaskStatus status, DateTime dueDateUtc)
     {
-        Validate(Id, OwnerId, title, description, status, dueDateUtc);
+        Update(title, description, status, dueDateUtc, null, null);
+    }
+
+    public void Update(
+        string title,
+        string? description,
+        TaskStatus status,
+        DateTime dueDateUtc,
+        Guid? updatedById,
+        DateTime? updatedAtUtc,
+        Guid? assignedToId = null)
+    {
+        var newAssignedToId = assignedToId ?? AssignedToId;
+        Validate(Id, newAssignedToId, title, description, status, dueDateUtc);
+        ValidateStatusTransition(Status, status);
         Title = title.Trim();
         Description = NormalizeDescription(description);
         Status = status;
         DueDateUtc = dueDateUtc.ToUniversalTime();
+        AssignedToId = newAssignedToId;
+        UpdatedById = updatedById;
+        UpdatedAtUtc = updatedAtUtc?.ToUniversalTime();
     }
 
     private static void Validate(
@@ -92,4 +148,24 @@ public sealed class TaskItem
 
     private static string? NormalizeDescription(string? description)
         => string.IsNullOrWhiteSpace(description) ? null : description.Trim();
+
+    private static void ValidateStatusTransition(TaskStatus current, TaskStatus next)
+    {
+        if (current == TaskStatus.Canceled)
+        {
+            throw new InvalidOperationException("Canceled tasks cannot be modified.");
+        }
+
+        if (current == TaskStatus.Completed && next != TaskStatus.Completed)
+        {
+            throw new InvalidOperationException("Completed tasks cannot be reopened.");
+        }
+
+        if (current == TaskStatus.Pending && next is not (TaskStatus.Pending or TaskStatus.InProgress or TaskStatus.Canceled)
+            || current == TaskStatus.InProgress && next is not (TaskStatus.InProgress or TaskStatus.Completed or TaskStatus.Canceled)
+            || current == TaskStatus.Completed && next != TaskStatus.Completed)
+        {
+            throw new InvalidOperationException("The task status transition is not allowed.");
+        }
+    }
 }

@@ -8,4 +8,6 @@ public sealed record UpdateTaskCommand(
     string Title,
     string? Description,
     TaskStatus Status,
-    DateTime DueDateUtc);
+    DateTime DueDateUtc,
+    UserRole ActorRole = UserRole.User,
+    Guid? AssignedToId = null);

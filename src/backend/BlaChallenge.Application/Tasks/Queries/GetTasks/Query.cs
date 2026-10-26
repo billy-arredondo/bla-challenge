@@ -1,3 +1,5 @@
 namespace BlaChallenge.Application.Tasks.Queries.GetTasks;
 
-public sealed record GetTasksQuery(Guid OwnerId);
+using BlaChallenge.Domain;
+
+public sealed record GetTasksQuery(Guid OwnerId, UserRole ActorRole = UserRole.User);
