@@ -239,3 +239,9 @@ focused on significant work, decisions, and verification results.
 - Documented that the frontend screen designs were extracted from Google Stitch.
 - Added the Stitch screen mapping and clarified that the HTML files are design
   references rather than production frontend code.
+
+## Documentation Review 012
+
+- Recorded the preference to create the project structure and initial
+  dependencies manually rather than through prompts or automatically generated
+  scaffolding.

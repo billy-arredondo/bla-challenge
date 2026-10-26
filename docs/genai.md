@@ -557,3 +557,17 @@ designs were extracted from Google Stitch.
 - Reviewed the updated documentation for English wording and consistency with the
   existing Stitch directory structure.
 - No application code or runtime behavior was changed.
+
+## Documentation Review 012
+
+### User preference
+
+The project structure and initial dependencies should be created manually rather
+than through prompts or automatically generated scaffolding. GenAI may assist
+with review, documentation, and implementation after the initial setup, but it
+should not replace the manual setup decision.
+
+### Validation
+
+- Recorded the preference in the GenAI process documentation.
+- No application code or runtime behavior was changed.
