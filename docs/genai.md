@@ -9,7 +9,8 @@ the first authentication slice. The repository contains a .NET 10 solution with
 Domain, Application, Infrastructure, API, and four matching xUnit test projects.
 User registration, SQLite user persistence, password hashing, JWT authentication,
 role-based task management, and authentication/authorization tests are implemented.
-The frontend is not implemented yet.
+The frontend is implemented with feature modules and split styles; automated
+frontend behavior tests remain pending.
 
 ## Tooling and Review Policy
 
@@ -636,5 +637,29 @@ management. The user also selected React Router, Zustand, TanStack Query, and Zo
 - Resolved the initial Windows pnpm symlink lock by reinstalling with the hoisted
   node linker configuration.
 - Confirmed `pnpm build` succeeds. `pnpm lint` succeeds with two advisory React
-  warnings about the task editor's date initialization and query synchronization;
-  automated browser tests remain a documented follow-up.
+  warnings about the task editor's date initialization and query synchronization.
+
+## Documentation Review 015
+
+### Prompt
+
+The user requested subdividing the monolithic frontend stylesheet and updating
+documentation when the new organization affected the documented architecture.
+
+### Output and review
+
+- Split `App.css` into `src/frontend/src/styles/` files for tokens, layout,
+  shared components, dashboard, tasks, users, authentication, and responsive
+  rules.
+- Added `styles/index.css` as the single style entry point and preserved the
+  existing CSS selectors and visual language.
+- Updated the frontend README, implementation plan, and testing notes to match
+  the modular structure.
+
+### Validation and corrections
+
+- The first automated extraction used incorrect source line boundaries and
+  produced invalid CSS fragments. The staged stylesheet was restored and split
+  again using the exact staged line ranges.
+- Ran Prettier on all split stylesheets.
+- Verified `pnpm lint`, `pnpm build`, and `git diff --check` successfully.
