@@ -254,3 +254,13 @@ focused on significant work, decisions, and verification results.
 - Updated task authorization so Users see only assigned tasks, while Admins and Superadmins can manage all non-canceled tasks and assign work to any user.
 - Added API coverage for completed-task restrictions and Superadmin/Admin assignment flow.
 - Verified `dotnet format src/backend/BlaChallenge.slnx --no-restore --verify-no-changes`, a zero-warning build, and 32 passing tests.
+
+## Documentation Review 014
+
+- Updated the frontend scope after the backend role-based authorization iteration.
+- Recorded React Router, Zustand, TanStack Query, Zod, responsive Stitch-derived
+  UI, and light/dark theme persistence as confirmed frontend decisions.
+- Implemented the initial frontend integration with authentication, role-aware
+  task CRUD, Superadmin user management, validation, and API error handling.
+- Verified `pnpm install --force --config.node-linker=hoisted`, `pnpm build`, and
+  `pnpm lint`; lint currently reports two React advisory warnings in the editor.

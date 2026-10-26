@@ -101,12 +101,14 @@ and 11 API cases. The Domain total is higher than the number of methods because
 
 ## Not Covered Yet
 
-- Frontend behavior, because the frontend has not been scaffolded.
+- Frontend automated behavior tests are not yet configured. The implemented UI
+  requires coverage for route protection, role-aware task actions, Zod form
+  validation, API error states, theme persistence, and the Superadmin user flow.
 - Detailed user-management application tests and SQLite migration tests remain limited; API coverage verifies the primary Superadmin flow.
 - Browser-level or visual responsive tests.
 - Automatic seeded demo data and demo-credential verification.
 - A published line, branch, or mutation coverage target.
 - Load, performance, and deployment tests.
 
-When the frontend and seeded demo flow are implemented, their test scope should
-be added here and to the delivery documentation.
+The frontend validation currently consists of `pnpm lint` and `pnpm build`. Add
+component/browser tests before delivery and record their results here.
