@@ -536,3 +536,24 @@ documented test, allowing the inventory to use tables instead of bullet points.
 - Confirmed that all 26 test methods are represented and that the latest test
   run still reports 27 executed cases.
 - No application behavior or test implementation was changed.
+
+## Documentation Review 011
+
+### Prompt
+
+The user requested updating the documentation to indicate that the frontend
+designs were extracted from Google Stitch.
+
+### Output and review
+
+- Updated `docs/design/README.md` to identify the Stitch HTML files as extracted
+  design references and preserve the screen mapping.
+- Recorded that the Stitch files are references rather than production frontend
+  code.
+- Added the corresponding entry to `docs/development-log.md`.
+
+### Validation
+
+- Reviewed the updated documentation for English wording and consistency with the
+  existing Stitch directory structure.
+- No application code or runtime behavior was changed.
