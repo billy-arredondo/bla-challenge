@@ -31,7 +31,7 @@ Project dependencies and the next implementation steps are documented in the [im
 - [`docs/brainstorming.md`](docs/brainstorming.md): initial ideas and proposals.
 - [`docs/implementation-plan.md`](docs/implementation-plan.md): current architecture, confirmed decisions, pending scope, and implementation sequence.
 - [`docs/development-log.md`](docs/development-log.md): chronological record of development work and verification.
-- [`docs/genai.md`](docs/genai.md): GenAI prompts, representative output, review evidence, and limitations.
+- [`docs/genai.md`](GENAI.md): GenAI prompts, representative output, review evidence, and limitations.
 - [`docs/testing.md`](docs/testing.md): tested behavior by backend layer, test commands, and current testing gaps.
 - [`AGENTS.md`](AGENTS.md): repository-specific guidance for coding agents.
 
