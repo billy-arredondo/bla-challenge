@@ -174,6 +174,8 @@ public sealed class TasksApiTests : IAsyncLifetime
         var user = await userResponse.Content.ReadFromJsonAsync<UserResponse>();
 
         await AuthenticateExistingAsync(adminEmail, "password123");
+        Assert.Equal(HttpStatusCode.OK, (await client.GetAsync("/api/users")).StatusCode);
+
         var taskResponse = await client.PostAsJsonAsync("/api/tasks", new
         {
             title = "Assigned task",

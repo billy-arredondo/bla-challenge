@@ -56,9 +56,17 @@ public sealed class ManageUsersUseCase(
         UserRole actorRole,
         CancellationToken cancellationToken = default)
     {
-        EnsureSuperadmin(actorRole);
+        EnsureAdminOrSuperadmin(actorRole);
         var users = await userRepository.GetAllAsync(cancellationToken);
         return users.Select(RegisterUserUseCase.ToResponse).ToList();
+    }
+
+    private static void EnsureAdminOrSuperadmin(UserRole role)
+    {
+        if (role is not (UserRole.Admin or UserRole.Superadmin))
+        {
+            throw new UserManagementForbiddenException("Only an Admin or Superadmin can list users.");
+        }
     }
 
     private static void EnsureSuperadmin(UserRole role)

@@ -9,15 +9,17 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
-[Authorize(Roles = nameof(UserRole.Superadmin))]
+[Authorize]
 [Route("api/users")]
 public sealed class UsersController(ManageUsersUseCase manageUsers) : ControllerBase
 {
     [HttpGet]
+    [Authorize(Roles = $"{nameof(UserRole.Admin)},{nameof(UserRole.Superadmin)}")]
     public async Task<ActionResult<IReadOnlyList<UserResponse>>> GetAll(CancellationToken cancellationToken)
         => Ok(await manageUsers.GetAllAsync(GetRole(), cancellationToken));
 
     [HttpPost]
+    [Authorize(Roles = nameof(UserRole.Superadmin))]
     public async Task<ActionResult<UserResponse>> Create(
         CreateUserRequest request,
         CancellationToken cancellationToken)
@@ -44,6 +46,7 @@ public sealed class UsersController(ManageUsersUseCase manageUsers) : Controller
     }
 
     [HttpPut("{id:guid}/role")]
+    [Authorize(Roles = nameof(UserRole.Superadmin))]
     public async Task<ActionResult<UserResponse>> ChangeRole(
         Guid id,
         ChangeRoleRequest request,
