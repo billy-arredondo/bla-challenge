@@ -18,6 +18,11 @@ src/backend/
   BlaChallenge.Api.Tests/          # API tests
 src/frontend/
   React/Vite application using React Router, Zustand, TanStack Query, and Zod
+  src/app/           # routing, guards, session hydration, and theme sync
+  src/components/    # shared visual components
+  src/features/      # auth, dashboard, tasks, and users
+  src/layouts/       # authenticated and authentication shells
+  src/styles/        # tokens, layout, components, features, and responsive rules
 ```
 
 The solution currently contains four .NET 10 production projects and their
@@ -31,7 +36,8 @@ corresponding test projects. The current project dependencies are:
 The backend implementation currently includes registration and login, SQLite
 persistence, JWT Bearer authentication, role-based task authorization, task
 assignment, terminal task-state rules, and Superadmin-only user management.
-The frontend scaffold exists and is being implemented against these contracts.
+The frontend is implemented against these contracts and is validated with its
+build and lint commands. Automated frontend behavior tests remain pending.
 
 Application features are organized by entity. The current `Users` feature is
 split into `Commands` for registration and login and `Queries` for retrieving
@@ -56,9 +62,10 @@ the controller; move them to separate files when they are reused or make the
 controller harder to read.
 
 The frontend is a React/Vite application organized by app, shared components,
-and auth, tasks, users, and theme features. It uses React Router for navigation,
-Zustand for session/theme state, TanStack Query for server state, and Zod for
-request/response validation.
+layouts, feature modules, stores, and styles. It uses React Router for
+navigation, Zustand for session/theme state, TanStack Query for server state,
+and Zod for request/response validation. Styles are split into design tokens,
+layout, shared components, feature groups, and responsive rules.
 
 Create supporting files as they become useful rather than adding empty
 placeholders. See the root [README](../README.md) for setup, build, test, and API
@@ -106,10 +113,9 @@ current scaffold:
 3. **Task rules implemented:** statuses are `Pending`, `InProgress`, `Completed`,
    and `Canceled`; descriptions are optional; due dates are required and may be
    in the past; completed and canceled transitions are restricted.
-4. **Implement the frontend:** build responsive authentication, dashboard, task
-   CRUD, assignment, role-aware actions, Superadmin user management, and light /
-   dark themes. Handle loading, empty, validation, `401`, `403`, `404`, and
-   `409` states.
+4. **Frontend implemented:** responsive authentication, dashboard, task CRUD,
+   assignment, role-aware actions, Superadmin user management, light/dark themes,
+   loading, empty, validation, and API error states are implemented.
 5. **Verify the demo:** seed credentials; check each role's authorization
    boundaries, valid status transitions, assignment, invalid input, authentication
    failures, theme persistence, and frontend build/lint.

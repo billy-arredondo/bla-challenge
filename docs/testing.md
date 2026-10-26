@@ -110,5 +110,6 @@ and 11 API cases. The Domain total is higher than the number of methods because
 - A published line, branch, or mutation coverage target.
 - Load, performance, and deployment tests.
 
-The frontend validation currently consists of `pnpm lint` and `pnpm build`. Add
-component/browser tests before delivery and record their results here.
+The frontend validation currently consists of `pnpm lint` and `pnpm build`; both
+complete successfully with no lint warnings. Add component/browser tests before
+delivery and record their results here.
