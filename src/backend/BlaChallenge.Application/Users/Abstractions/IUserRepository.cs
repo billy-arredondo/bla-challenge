@@ -1,7 +1,6 @@
 namespace BlaChallenge.Application.Users.Abstractions;
 
 using BlaChallenge.Domain;
-
 public interface IUserRepository
 {
     Task AddAsync(User user, CancellationToken cancellationToken = default);

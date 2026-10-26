@@ -36,9 +36,9 @@ public sealed class AuthenticationController(
         {
             return BadRequest(new { error = exception.Message });
         }
-        catch (DuplicateUserException exception)
+        catch (DuplicateUserException)
         {
-            return Conflict(new { error = exception.Message });
+            return Conflict(new { error = "Unable to create the account with the provided information." });
         }
     }
 

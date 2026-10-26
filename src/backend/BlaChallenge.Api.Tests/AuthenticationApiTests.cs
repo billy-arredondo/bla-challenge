@@ -93,6 +93,21 @@ public sealed class AuthenticationApiTests : IAsyncLifetime
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
+    [Fact]
+    public async Task Register_with_existing_email_returns_generic_conflict()
+    {
+        var email = $"user-{Guid.NewGuid():N}@example.com";
+        await client.PostAsJsonAsync("/api/auth/register", new { email, password = "password123" });
+
+        var response = await client.PostAsJsonAsync("/api/auth/register", new { email, password = "another-password" });
+        var body = await response.Content.ReadAsStringAsync();
+
+        Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
+        Assert.DoesNotContain(email, body, StringComparison.OrdinalIgnoreCase);
+        Assert.DoesNotContain("already exists", body, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("Unable to create the account with the provided information.", body, StringComparison.Ordinal);
+    }
+
     private sealed record LoginResponse(UserResponse User, string AccessToken);
 
     private sealed record UserResponse(Guid Id, string Email, DateTime CreatedAtUtc);

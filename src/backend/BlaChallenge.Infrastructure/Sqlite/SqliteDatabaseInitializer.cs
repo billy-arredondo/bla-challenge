@@ -15,6 +15,15 @@ public sealed class SqliteDatabaseInitializer(SqliteConnectionFactory connection
                 PasswordHash TEXT NOT NULL,
                 CreatedAtUtc TEXT NOT NULL
             );
+            CREATE TABLE IF NOT EXISTS Tasks (
+                Id TEXT NOT NULL PRIMARY KEY,
+                OwnerId TEXT NOT NULL,
+                Title TEXT NOT NULL,
+                Description TEXT NULL,
+                Status TEXT NOT NULL,
+                DueDateUtc TEXT NOT NULL,
+                FOREIGN KEY (OwnerId) REFERENCES Users (Id) ON DELETE CASCADE
+            );
             """;
         await command.ExecuteNonQueryAsync(cancellationToken);
     }
