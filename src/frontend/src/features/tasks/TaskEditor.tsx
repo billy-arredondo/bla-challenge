@@ -7,12 +7,12 @@ import { PageHeader } from "../../components/PageHeader";
 import { api } from "../../lib/api";
 import { taskFormSchema, type Task, type TaskForm } from "../../lib/contracts";
 import { taskStatuses } from "../../lib/constants";
-import { errorText } from "../../lib/formatters";
+import { errorText, toDateTimeLocal } from "../../lib/formatters";
 import { useSession } from "../../stores";
 
 function defaultDueDate(): string {
   const tomorrow = new Date(Date.now() + 86400000);
-  return tomorrow.toISOString().slice(0, 16);
+  return toDateTimeLocal(tomorrow);
 }
 
 function taskToForm(task: Task): TaskForm {
@@ -20,7 +20,7 @@ function taskToForm(task: Task): TaskForm {
     title: task.title,
     description: task.description ?? "",
     status: task.status,
-    dueDateUtc: new Date(task.dueDateUtc).toISOString().slice(0, 16),
+    dueDateUtc: toDateTimeLocal(task.dueDateUtc),
     assignedToId: task.assignedToId,
   };
 }
@@ -65,7 +65,7 @@ function TaskFormView({ task }: TaskFormViewProps) {
   const usersQuery = useQuery({
     queryKey: ["users"],
     queryFn: api.users,
-    enabled: user?.role === "Superadmin",
+    enabled: user?.role === "Admin" || user?.role === "Superadmin",
   });
   const mutation = useMutation({
     mutationFn: (body: TaskForm) =>
