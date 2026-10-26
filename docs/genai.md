@@ -8,8 +8,8 @@ Work so far includes repository workflow automation, backend scaffolding, and
 the first authentication slice. The repository contains a .NET 10 solution with
 Domain, Application, Infrastructure, API, and four matching xUnit test projects.
 User registration, SQLite user persistence, password hashing, JWT authentication,
-and authentication tests are implemented. Task functionality and the frontend
-are not implemented yet.
+role-based task management, and authentication/authorization tests are implemented.
+The frontend is not implemented yet.
 
 ## Tooling and Review Policy
 
@@ -110,6 +110,47 @@ The dynamic model-selection plugin has passed JavaScript syntax validation, but 
 Future entries will continue documenting generated application code, test
 results, authentication decisions, and any corrections made during
 implementation.
+
+## Documentation Review 013
+
+### User prompt
+
+The user requested role-based task authorization with `User`, `Admin`, and
+`Superadmin` roles. Users create self-assigned tasks and can only read or modify
+their assigned tasks under the permitted statuses. Admins can assign and manage
+tasks for any user. Superadmins can create users and grant or revoke Admin
+privileges, but Superadmin privileges are immutable.
+
+### Generated implementation and corrections
+
+- Added domain roles, explicit task creator/assignee/update audit fields, and
+  `Canceled` status with terminal-state rules.
+- Added JWT role claims, SQLite role/audit persistence and migration, and a
+  configuration-driven idempotent Superadmin seed.
+- Added Superadmin-only user creation and role-management endpoints.
+- Corrected the initial task transition implementation after tests exposed that
+  `Pending -> Completed` was incorrectly accepted; valid transitions now include
+  `Pending -> InProgress`, `Pending -> Canceled`, `InProgress -> Completed`, and
+  `InProgress -> Canceled`.
+- Preserved `OwnerId` as a compatibility alias for `AssignedToId` while exposing
+  the explicit audit fields in the task response.
+
+### Validation
+
+- Ran `dotnet build src/backend/BlaChallenge.slnx --no-restore`: zero warnings and
+  zero errors.
+- Ran `dotnet test src/backend/BlaChallenge.slnx --no-build`: 32 tests passed.
+- Ran `dotnet format src/backend/BlaChallenge.slnx --no-restore --verify-no-changes`.
+- Added API tests for terminal completed tasks and Superadmin/Admin assignment.
+
+### Edge cases and limitations
+
+- Public registration always creates `User`; Superadmin management cannot create
+  or modify another Superadmin.
+- Existing SQLite databases receive new role and audit columns and old task owner
+  values are copied into creator and assignee fields.
+- Existing JWTs do not change when a user's role changes; the user must log in
+  again to receive a token with the new role claim.
 
 ## Task Management Iteration 001
 
