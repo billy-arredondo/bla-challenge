@@ -111,6 +111,55 @@ Future entries will continue documenting generated application code, test
 results, authentication decisions, and any corrections made during
 implementation.
 
+## Task Management Iteration 001
+
+### User prompt
+
+The user requested implementation of the backend Task Management feature with
+CRUD use cases, JWT authentication and authorization, Clean Architecture,
+SQLite parameterized SQL, TDD tests across all layers, and continuous updates to
+the required documentation. The user explicitly prohibited Entity Framework,
+Dapper, and Mediator, and requested that the frontend not be modified.
+
+### Proposals, decisions, and representative output
+
+- The implementation proposed and applied a `Task` domain entity with a closed
+  `TaskStatus` enum, direct Application use cases, an `ITaskRepository` port, a
+  SQLite adapter, and a protected `TasksController`.
+- Confirmed decisions were `Pending`, `InProgress`, and `Completed` statuses;
+  optional descriptions capped at 2,000 characters; required due dates stored
+  in UTC; and titles capped at 200 characters. Past due dates remain valid.
+- The representative ownership enforcement is the parameterized repository
+  predicate:
+
+```csharp
+WHERE Id = $id AND OwnerId = $ownerId;
+```
+
+- The controller never accepts an owner id. It reads `ClaimTypes.NameIdentifier`
+  from the authenticated principal and passes that value to the Application
+  command or query.
+
+### Corrections and validation
+
+- The first build failed because introducing a domain type named `Task` changed
+  unqualified asynchronous return types into the domain entity. The affected
+  contracts, implementations, and tests were corrected with explicit
+  `System.Threading.Tasks.Task` qualification.
+- JSON enum conversion was explicitly enabled so clients send and receive the
+  documented string statuses rather than numeric enum values.
+- A build after the initial implementation passed with zero warnings and zero
+  errors. The first `--no-build` test command ran previously built test binaries;
+  a fresh build must precede the final test result.
+- Final validation after a fresh build passed 27 tests across Domain, Application,
+  Infrastructure, and API test projects. Formatting verification and
+  `git diff --check` also passed.
+
+### Limitations and pending work
+
+- The frontend, automatic seeded demo data, and presentation materials remain
+  pending from the broader challenge. No real credentials or secrets were added.
+
 ## Documentation Review 001
 
 ### Prompt
@@ -442,3 +491,48 @@ dotnet_diagnostic.IDE0005.severity = error
   the four test projects.
 - `git diff --check` passed and all tracked files were confirmed to use LF line
   endings.
+
+## Documentation Review 009
+
+### Prompt
+
+The user asked for documentation explaining what the application is testing.
+
+### Output and review
+
+- Reviewed every current xUnit test file in the four backend test projects before
+  writing the test inventory.
+- Added `docs/testing.md` with the test strategy, behavior covered by each layer,
+  reproducible commands, and explicit gaps.
+- Avoided claiming frontend coverage, seeded-demo coverage, or a percentage
+  coverage target because those are not implemented or published yet.
+- Linked the new guide from `README.md`.
+
+### Validation and corrections
+
+- The test count and documented scenarios were checked against the test source
+  files rather than inferred from the challenge requirements.
+- The full solution test command was run after the documentation change; its
+  result is recorded in the development log.
+
+## Documentation Review 010
+
+### Prompt
+
+The user requested that `docs/testing.md` identify the method that performs each
+documented test, allowing the inventory to use tables instead of bullet points.
+
+### Output and review
+
+- Re-read all current xUnit test files and mapped every behavior to its exact
+  test file and method name.
+- Replaced the grouped behavior lists in `docs/testing.md` with tables for the
+  Domain, Application, Infrastructure, and API test projects.
+- Documented the distinction between test methods and executed test cases for
+  the parameterized domain theory.
+
+### Validation
+
+- Confirmed that all 26 test methods are represented and that the latest test
+  run still reports 27 executed cases.
+- No application behavior or test implementation was changed.

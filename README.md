@@ -1,6 +1,6 @@
 # Task Manager Challenge
 
-A task management application is being built for the .NET technical interview challenge. The current backend iteration implements user registration and JWT authentication; task management and the frontend remain pending.
+A task management application is being built for the .NET technical interview challenge. The backend implements user registration, JWT authentication, and user-owned task CRUD; the frontend remains pending.
 
 ## Challenge requirements
 
@@ -20,7 +20,7 @@ See [`docs/challenge.md`](docs/challenge.md) for the complete requirements.
 
 - `src/backend/BlaChallenge.slnx` contains four .NET 10 projects: Domain, Application, Infrastructure, and an ASP.NET Core API host.
 - Each production project has a matching xUnit test project, with Coverlet configured. Tests cover domain validation, application use cases, SQLite persistence, and authentication endpoints.
-- The API exposes public registration/login/ping endpoints and a protected `me` endpoint. SQLite initializes the `Users` table at startup; task models and CRUD endpoints are not implemented.
+- The API exposes public registration/login/ping endpoints, a protected `me` endpoint, and protected task CRUD endpoints. SQLite initializes the `Users` and `Tasks` tables at startup.
 - The frontend remains to be selected and implemented. Seeded task demo data and credentials are pending.
 
 Project dependencies and the next implementation steps are documented in the [implementation plan](docs/implementation-plan.md).
@@ -31,6 +31,7 @@ Project dependencies and the next implementation steps are documented in the [im
 - [`docs/implementation-plan.md`](docs/implementation-plan.md): current architecture, confirmed decisions, pending scope, and implementation sequence.
 - [`docs/development-log.md`](docs/development-log.md): chronological record of development work and verification.
 - [`docs/genai.md`](docs/genai.md): GenAI prompts, representative output, review evidence, and limitations.
+- [`docs/testing.md`](docs/testing.md): tested behavior by backend layer, test commands, and current testing gaps.
 - [`AGENTS.md`](AGENTS.md): repository-specific guidance for coding agents.
 
 ## Development and demo
@@ -86,8 +87,15 @@ The API endpoints implemented in this iteration are:
 - `POST /api/auth/register`: creates a user and returns `201 Created`.
 - `POST /api/auth/login`: validates credentials and returns a JWT.
 - `GET /api/auth/me`: protected endpoint requiring `Authorization: Bearer <token>`.
+- `POST /api/tasks`: creates an authenticated user's task. The owner is taken from the JWT, not the request body.
+- `GET /api/tasks`: lists only the authenticated user's tasks.
+- `GET /api/tasks/{id}`: gets one owned task, or returns `404` for a missing or another user's task.
+- `PUT /api/tasks/{id}`: updates an owned task.
+- `DELETE /api/tasks/{id}`: deletes an owned task.
 
-The SQLite database is created as `bla-challenge.db` in the API working directory. The `Users` table is initialized automatically. Do not commit the database file or JWT key.
+Task request fields are `title` (required, up to 200 characters), `description` (optional, up to 2,000 characters), `status` (`Pending`, `InProgress`, or `Completed`), and `dueDateUtc` (required ISO-8601 date). Due dates in the past are accepted to represent overdue tasks.
+
+The SQLite database is created as `bla-challenge.db` in the API working directory. The `Users` and `Tasks` tables are initialized automatically. Do not commit the database file or JWT key.
 
 For local HTTPS, trust the development certificate where supported and use the HTTPS profile:
 
@@ -98,7 +106,7 @@ dotnet run --project src/backend/BlaChallenge.Api --launch-profile https
 
 The HTTPS profile uses `https://localhost:7226` and `http://localhost:5278`. Database initialization is automatic; frontend setup, task seed data, and demo credentials will be documented as those features are implemented.
 
-### Test the authentication endpoints
+### Test the authentication and task endpoints
 
 With the API running, register and log in using any HTTP client. For example, the following PowerShell commands use the HTTP profile:
 
@@ -107,4 +115,10 @@ $body = @{ email = "demo@example.com"; password = "password123" } | ConvertTo-Js
 Invoke-RestMethod -Method Post -Uri http://localhost:5278/api/auth/register -ContentType "application/json" -Body $body
 $login = Invoke-RestMethod -Method Post -Uri http://localhost:5278/api/auth/login -ContentType "application/json" -Body $body
 Invoke-RestMethod -Method Get -Uri http://localhost:5278/api/auth/me -Headers @{ Authorization = "Bearer $($login.accessToken)" }
+$headers = @{ Authorization = "Bearer $($login.accessToken)" }
+$task = @{ title = "Prepare demo"; description = "Show task CRUD"; status = "Pending"; dueDateUtc = "2026-12-31T00:00:00Z" } | ConvertTo-Json
+Invoke-RestMethod -Method Post -Uri http://localhost:5278/api/tasks -Headers $headers -ContentType "application/json" -Body $task
+Invoke-RestMethod -Method Get -Uri http://localhost:5278/api/tasks -Headers $headers
 ```
+
+The repository does not currently seed credentials or task records automatically. The commands above create disposable demo data locally; seed automation remains a delivery follow-up.
