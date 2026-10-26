@@ -20,6 +20,21 @@ pnpm lint
 pnpm build
 ```
 
+## Frontend structure
+
+The application is organized by responsibility and feature rather than keeping
+pages and data access in one component:
+
+- `src/app` contains routing, route guards, session hydration, and global theme synchronization.
+- `src/layouts` contains the authenticated workspace and authentication shells.
+- `src/features/auth`, `src/features/dashboard`, `src/features/tasks`, and `src/features/users` contain feature pages and feature-specific behavior.
+- `src/components` contains reusable visual building blocks.
+- `src/lib` contains API access, contracts, constants, and formatting utilities.
+- `src/stores` contains independent session, theme, and permission modules.
+
+Components and functions use multiline formatting so rendering, event handling,
+and data operations remain easy to scan and test independently.
+
 Currently, two official plugins are available:
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
